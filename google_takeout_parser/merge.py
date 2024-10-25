@@ -84,7 +84,7 @@ def _create_key(e: BaseEvent) -> Key:
 
 
 # This is so that its easier to use this logic in other
-# places, e.g. in github.com/seanbreckenridge/HPI
+# places, e.g. in github.com/purarue/HPI
 class GoogleEventSet:
     """
     Class to help manage keys for the models

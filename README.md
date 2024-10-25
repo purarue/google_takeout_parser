@@ -16,7 +16,7 @@ Parses data out of your [Google Takeout](https://takeout.google.com/) (History, 
 - [Contributing](#contributing)
 - [Testing](#testing)
 
-This doesn't handle all cases, but I have yet to find a parser that does, so here is my attempt at parsing what I see as the most useful info from it. The Google Takeout is pretty particular, and the contents of the directory depend on what you select while exporting. Unhandled files will warn, though feel free to [PR a parser](#contributing) or [create an issue](https://github.com/seanbreckenridge/google_takeout_parser/issues/new?title=add+parser+for) if this doesn't parse some part you want.
+This doesn't handle all cases, but I have yet to find a parser that does, so here is my attempt at parsing what I see as the most useful info from it. The Google Takeout is pretty particular, and the contents of the directory depend on what you select while exporting. Unhandled files will warn, though feel free to [PR a parser](#contributing) or [create an issue](https://github.com/purarue/google_takeout_parser/issues/new?title=add+parser+for) if this doesn't parse some part you want.
 
 This can take a few minutes to parse depending on what you have in your Takeout (especially while using the old HTML format), so this uses [cachew](https://github.com/karlicoss/cachew) to cache the function result for each Takeout you may have. That means this'll take a few minutes the first time parsing a takeout, but then only a few seconds every subsequent time.
 
@@ -52,7 +52,7 @@ This currently parses:
       - `Youtube/live chats/live chats.csv`
   - Likes: `YouTube and YouTube Music/playlists/likes.json`
 
-This was extracted out of [my HPI](https://github.com/seanbreckenridge/HPI/tree/4bb1f174bdbd693ab29e744413424d18b8667b1f/my/google) modules, which was in turn modified from the google files in [karlicoss/HPI](https://github.com/karlicoss/HPI/blob/4a04c09f314e10a4db8f35bf1ecc10e4d0203223/my/google/takeout/html.py)
+This was extracted out of [my HPI](https://github.com/purarue/HPI/tree/4bb1f174bdbd693ab29e744413424d18b8667b1f/my/google) modules, which was in turn modified from the google files in [karlicoss/HPI](https://github.com/karlicoss/HPI/blob/4a04c09f314e10a4db8f35bf1ecc10e4d0203223/my/google/takeout/html.py)
 
 ## Installation
 
@@ -131,8 +131,8 @@ Also contains a small utility command to help move/extract the google takeout:
 
 ```bash
 $ google_takeout_parser move --from ~/Downloads/takeout*.zip --to-dir ~/data/google_takeout --extract
-Extracting /home/sean/Downloads/takeout-20211023T070558Z-001.zip to /tmp/tmp07ua_0id
-Moving /tmp/tmp07ua_0id/Takeout to /home/sean/data/google_takeout/Takeout-1634993897
+Extracting /home/username/Downloads/takeout-20211023T070558Z-001.zip to /tmp/tmp07ua_0id
+Moving /tmp/tmp07ua_0id/Takeout to /home/username/data/google_takeout/Takeout-1634993897
 $ ls -1 ~/data/google_takeout/Takeout-1634993897
 archive_browser.html
 Chrome
@@ -252,22 +252,22 @@ On certain machines, the giant HTML files may even take so much memory that the 
 
 Just to give a brief overview, to add new functionality (parsing some new folder that this doesn't currently support), you'd need to:
 
-- Add a `model` for it in [`models.py`](google_takeout_parser/models.py) subclassing `BaseEvent` and adding it to the Union at the bottom of the file. That should have a [`key` property function](https://github.com/seanbreckenridge/google_takeout_parser/blob/a8aefac76d8e1474ca2275b4a7c78bbb962c7a04/google_takeout_parser/models.py#L185-L187) which describes each event uniquely (this is used to remove duplicate items when merging takeouts)
+- Add a `model` for it in [`models.py`](google_takeout_parser/models.py) subclassing `BaseEvent` and adding it to the Union at the bottom of the file. That should have a [`key` property function](https://github.com/purarue/google_takeout_parser/blob/a8aefac76d8e1474ca2275b4a7c78bbb962c7a04/google_takeout_parser/models.py#L185-L187) which describes each event uniquely (this is used to remove duplicate items when merging takeouts)
 - Write a function which takes the `Path` to the file you're trying to parse and converts it to the model you created (See examples in [`parse_json.py`](google_takeout_parser/parse_json.py)). Ideally extract a single raw item from the takeout file add a test for it so its obvious when/if the format changes.
 - Add a regex match for the file path to the handler map in [`google_takeout_parser/locales/en.py`](google_takeout_parser/locales/en.py).
 
 Dont feel required to add support for all locales, its somewhat annoying to swap languages on google, request a takeout, wait for it to process and then swap back.
 
-Though, if your takeout is in some language this doesn't support, you can [create an issue](https://github.com/seanbreckenridge/google_takeout_parser/issues/new?title=support+new+locale) with the file structure (run `find Takeout` and/or `tree Takeout`), or contribute a locale file by creating a `path -> function mapping` ([see locales](https://github.com/seanbreckenridge/google_takeout_parser/tree/master/google_takeout_parser/locales)), and adding it to the global `LOCALES` variables in `locales/all.py` and `locales/main.py`
+Though, if your takeout is in some language this doesn't support, you can [create an issue](https://github.com/purarue/google_takeout_parser/issues/new?title=support+new+locale) with the file structure (run `find Takeout` and/or `tree Takeout`), or contribute a locale file by creating a `path -> function mapping` ([see locales](https://github.com/purarue/google_takeout_parser/tree/master/google_takeout_parser/locales)), and adding it to the global `LOCALES` variables in `locales/all.py` and `locales/main.py`
 
-This is a pretty difficult to maintain, as it requires a lot of manual testing from people who have access to these takeouts, and who actively use the language that the takeout is in. My google accounts main language is English, so I upkeep that locale whenever I notice changes, but its not trivial to port those changes to other locales without swapping my language, making an export, waiting, and then switching back. I keep track of mismatched changes [in this board](https://github.com/users/seanbreckenridge/projects/1/views/1)
+This is a pretty difficult to maintain, as it requires a lot of manual testing from people who have access to these takeouts, and who actively use the language that the takeout is in. My google accounts main language is English, so I upkeep that locale whenever I notice changes, but its not trivial to port those changes to other locales without swapping my language, making an export, waiting, and then switching back. I keep track of mismatched changes [in this board](https://github.com/users/purarue/projects/1/views/1)
 
-Ideally, when first creating a locale file, you would select everything when doing a takeout (not just the `My Activity`/`Chrome`/`Location History` like I suggested above), so [paths that are not parsed can be ignored properly](https://github.com/seanbreckenridge/google_takeout_parser/blob/4981c241c04b5b37265710dcc6ca00f19d1eafb4/google_takeout_parser/locales/en.py#L105C1-L113).
+Ideally, when first creating a locale file, you would select everything when doing a takeout (not just the `My Activity`/`Chrome`/`Location History` like I suggested above), so [paths that are not parsed can be ignored properly](https://github.com/purarue/google_takeout_parser/blob/4981c241c04b5b37265710dcc6ca00f19d1eafb4/google_takeout_parser/locales/en.py#L105C1-L113).
 
 ### Testing
 
 ```bash
-git clone 'https://github.com/seanbreckenridge/google_takeout_parser'
+git clone 'https://github.com/purarue/google_takeout_parser'
 cd ./google_takeout_parser
 pip install '.[testing]'
 mypy ./google_takeout_parser

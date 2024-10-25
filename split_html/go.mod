@@ -1,4 +1,4 @@
-module github.com/seanbreckenridge/google_takeout_parser/scripts
+module github.com/purarue/google_takeout_parser/scripts
 
 go 1.18.0
 

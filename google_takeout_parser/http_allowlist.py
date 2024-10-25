@@ -1,5 +1,5 @@
 """
-For context, see: https://github.com/seanbreckenridge/google_takeout_parser/issues/31
+For context, see: https://github.com/purarue/google_takeout_parser/issues/31
 
 This converts HTTP URLs to HTTPS, if they're from certain google domains.
 In some cases URLs in the takeout are HTTP for no reason, and converting them
@@ -223,7 +223,7 @@ def _convert_to_https(url: str, logger: Optional[logging.Logger] = None) -> str:
             return urlunsplit(("https",) + uu[1:])
         if logger:
             logger.debug(
-                "HTTP URL did not match allowlist: %s\nIf you think this should be auto-converted to HTTPS, make an issue here: https://github.com/seanbreckenridge/google_takeout_parser/issues/new",
+                "HTTP URL did not match allowlist: %s\nIf you think this should be auto-converted to HTTPS, make an issue here: https://github.com/purarue/google_takeout_parser/issues/new",
                 url,
             )
     # some other scheme, just return
