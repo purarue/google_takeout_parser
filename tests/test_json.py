@@ -160,14 +160,14 @@ def test_location_2024(tmp_path_f: Path) -> None:
 
 
 def test_chrome_history(tmp_path_f: Path) -> None:
-    contents = '{"Browser History": [{"page_transition": "LINK", "title": "title", "url": "https://sean.fish", "client_id": "W1vSb98l403jhPeK==", "time_usec": 1617404690134513}]}'
+    contents = '{"Browser History": [{"page_transition": "LINK", "title": "title", "url": "https://purarue.xyz", "client_id": "W1vSb98l403jhPeK==", "time_usec": 1617404690134513}]}'
     fp = tmp_path_f / "file"
     fp.write_text(contents)
     res = list(prj._parse_chrome_history(fp))
     assert res == [
         models.ChromeHistory(
             title="title",
-            url="https://sean.fish",
+            url="https://purarue.xyz",
             dt=datetime.datetime(
                 2021, 4, 2, 23, 4, 50, 134513, tzinfo=datetime.timezone.utc
             ),
