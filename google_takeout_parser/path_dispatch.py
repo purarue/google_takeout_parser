@@ -262,7 +262,10 @@ class TakeoutParser:
         )
 
     @staticmethod
-    def _match_handler(relative_path: str, handler: Iterable[Tuple[Pattern[str], Optional[HandlerFunction]]]) -> HandlerMatch:
+    def _match_handler(
+        relative_path: str,
+        handler: Iterable[Tuple[Pattern[str], Optional[HandlerFunction]]],
+    ) -> HandlerMatch:
         """
         Match one of the handler regexes to a function which parses the file
         """
@@ -310,11 +313,12 @@ class TakeoutParser:
             # many of them will get rejected by the regexes in handlers anyway
 
             takeout_dir_walk: Callable[..., Iterator[Tuple[Path, List[str], List[str]]]]
-            if hasattr(takeout_dir, 'walk'):
+            if hasattr(takeout_dir, "walk"):
                 # this codepath is used from python 3.12 that has Path.walk
                 # , or other implementations that support it (e.g. zipfile wrappers)
                 takeout_dir_walk = takeout_dir.walk
             else:
+
                 def takeout_dir_walk() -> Iterator[Tuple[Path, List[str], List[str]]]:
                     for root, dirs, files in os.walk(takeout_dir):
                         yield Path(root), dirs, files
@@ -326,7 +330,7 @@ class TakeoutParser:
                 # compute relative path of parent dir once, this saves a lot of time when takeout has tens of thousands of files
                 root_relative = root.relative_to(takeout_dir)
                 for f in files:
-                    if f[0] == '.':
+                    if f[0] == ".":
                         continue
                     yield os.path.join(root_relative, f)
 

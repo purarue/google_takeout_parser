@@ -171,7 +171,7 @@ def test_chrome_history(tmp_path_f: Path) -> None:
             dt=datetime.datetime(
                 2021, 4, 2, 23, 4, 50, 134513, tzinfo=datetime.timezone.utc
             ),
-            pageTransition="LINK"
+            pageTransition="LINK",
         ),
     ]
 
@@ -266,7 +266,7 @@ def test_semantic_location_history(tmp_path_f: Path) -> None:
                 address=None,
                 locationConfidence=None,
                 placeId=None,
-                semanticType='TYPE_WORK',
+                semanticType="TYPE_WORK",
                 sourceInfoDeviceTag=None,
             ),
         ],
@@ -320,63 +320,61 @@ def test_semantic_location_history_2024(tmp_path_f: Path) -> None:
                 "activitySegment": {
                     "startLocation": {
                         "latitudeE7": 555555555,
-                        "longitudeE7": -1066666666
+                        "longitudeE7": -1066666666,
                     },
                     "endLocation": {
                         "latitudeE7": 555555567,
-                        "longitudeE7": -1066666678
+                        "longitudeE7": -1066666678,
                     },
                     "duration": {
                         "startTimestamp": "2017-12-11T01:20:06.106Z",
-                        "endTimestamp": "2017-12-11T01:40:06.106Z"
+                        "endTimestamp": "2017-12-11T01:40:06.106Z",
                     },
                     "distance": 13071,
                     "activityType": "IN_PASSENGER_VEHICLE",
                     "confidence": "MEDIUM",
-                    "activities": [{
-                        "activityType": "IN_PASSENGER_VEHICLE",
-                        "probability": 85.514968640442
-                    }, {
-                        "activityType": "MOTORCYCLING",
-                        "probability": 8.858836042221917
-                    }, {
-                        "activityType": "WALKING",
-                        "probability": 4.7803567526550035
-                    }],
+                    "activities": [
+                        {
+                            "activityType": "IN_PASSENGER_VEHICLE",
+                            "probability": 85.514968640442,
+                        },
+                        {
+                            "activityType": "MOTORCYCLING",
+                            "probability": 8.858836042221917,
+                        },
+                        {"activityType": "WALKING", "probability": 4.7803567526550035},
+                    ],
                     "waypointPath": {
-                        "waypoints": [{
-                            "latE7": 123456789,
-                            "lngE7": 1210000000
-                        }, {
-                            "latE7": 123456089,
-                            "lngE7": 1210000200
-                        }, {
-                            "latE7": 123456289,
-                            "lngE7": 1210000500
-                        }],
-                        "source": "INFERRED"
+                        "waypoints": [
+                            {"latE7": 123456789, "lngE7": 1210000000},
+                            {"latE7": 123456089, "lngE7": 1210000200},
+                            {"latE7": 123456289, "lngE7": 1210000500},
+                        ],
+                        "source": "INFERRED",
                     },
                     "simplifiedRawPath": {
-                        "points": [{
-                            "latE7": 123456489,
-                            "lngE7": 1210000240,
-                            "accuracyMeters": 10,
-                            "timestamp": "2017-12-11T01:35:04Z"
-                        }]
+                        "points": [
+                            {
+                                "latE7": 123456489,
+                                "lngE7": 1210000240,
+                                "accuracyMeters": 10,
+                                "timestamp": "2017-12-11T01:35:04Z",
+                            }
+                        ]
                     },
                     "editConfirmationStatus": "NOT_CONFIRMED",
                     "parkingEvent": {
                         "location": {
                             "latitudeE7": 123456289,
                             "longitudeE7": 1210000500,
-                            "accuracyMetres": 163
+                            "accuracyMetres": 163,
                         },
                         "method": "END_OF_ACTIVITY_SEGMENT",
                         "locationSource": "UNKNOWN",
-                        "timestamp": "2017-12-11T01:40:06Z"
-                    }
+                        "timestamp": "2017-12-11T01:40:06Z",
+                    },
                 }
-            }
+            },
         ]
     }
     fp = tmp_path_f / "file"
@@ -424,7 +422,7 @@ def test_semantic_location_history_2024(tmp_path_f: Path) -> None:
                 address=None,
                 locationConfidence=None,
                 placeId=None,
-                semanticType='TYPE_WORK',
+                semanticType="TYPE_WORK",
                 sourceInfoDeviceTag=None,
             ),
         ],

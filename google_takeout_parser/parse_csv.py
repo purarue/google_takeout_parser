@@ -11,13 +11,13 @@ from .time_utils import parse_json_utc_date
 
 def _parse_youtube_comment_row(row: Dict[str, Any]) -> Res[CSVYoutubeComment]:
     try:
-        comment_id = row['Comment ID']
-        channel_id = row['Channel ID']
-        created_at = row['Comment Create Timestamp']
-        price = row['Price']
-        parent_comment_id = row['Parent Comment ID']
-        video_id = row['Video ID']
-        textJSON = row['Comment Text']
+        comment_id = row["Comment ID"]
+        channel_id = row["Channel ID"]
+        created_at = row["Comment Create Timestamp"]
+        price = row["Price"]
+        parent_comment_id = row["Parent Comment ID"]
+        video_id = row["Video ID"]
+        textJSON = row["Comment Text"]
     except KeyError as e:
         return e
     return CSVYoutubeComment(
@@ -117,7 +117,7 @@ def _validate_content(content: Union[str, Dict[Any, Any]]) -> Res[List[Dict[str,
             if i != len(split) - 1:
                 js = js + json_end
             # we get \n as a result of csv parser... but json parser can't handle them!
-            js = js.replace('\n', '\\n')
+            js = js.replace("\n", "\\n")
             segments.append(json.loads(js))
         return segments
     # old format

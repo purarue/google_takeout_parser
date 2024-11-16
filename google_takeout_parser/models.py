@@ -168,7 +168,8 @@ class LikedYoutubeVideo(BaseEvent):
 class PlayStoreAppInstall(BaseEvent):
     title: str
     lastUpdateTime: datetime  # timestamp for when the installation event occurred
-    firstInstallationTime: datetime  # timetamp for when you first installed the app on the given device
+    # timestamp for when you first installed the app on the given device
+    firstInstallationTime: datetime
     deviceName: Optional[str]
     deviceCarrier: Optional[str]
     deviceManufacturer: Optional[str]

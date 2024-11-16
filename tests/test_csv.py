@@ -38,7 +38,10 @@ UgwDN8UeMxW4NDFbvY54AaABAg.9iwJkUYNcXa9u0lv3j3Abh,UCA6DtnbZ2KJckyTYfXOwQNA,2023-
         videoId="WtOskFeLmr4",
         contentJSON='{"takeoutSegments":[{"text":"coalowl the legend"}]}',
     )
-    assert reconstruct_comment_content(res0.contentJSON, format="text") == "coalowl the legend"
+    assert (
+        reconstruct_comment_content(res0.contentJSON, format="text")
+        == "coalowl the legend"
+    )
 
     assert not isinstance(res1, Exception)
     assert res1 == CSVYoutubeComment(
@@ -50,7 +53,10 @@ UgwDN8UeMxW4NDFbvY54AaABAg.9iwJkUYNcXa9u0lv3j3Abh,UCA6DtnbZ2KJckyTYfXOwQNA,2023-
         videoId="jH39c5-y6kg",
         contentJSON='{"takeoutSegments":[{"text":"Ah, this is the reason why Ive never seen concurrent write failures myself, python\'s default timeout value is 5s, so it just waits in a busy loop if I have \'concurrent writers\'"}]}',
     )
-    assert reconstruct_comment_content(res1.contentJSON, format="text") == "Ah, this is the reason why Ive never seen concurrent write failures myself, python\'s default timeout value is 5s, so it just waits in a busy loop if I have \'concurrent writers\'"
+    assert (
+        reconstruct_comment_content(res1.contentJSON, format="text")
+        == "Ah, this is the reason why Ive never seen concurrent write failures myself, python's default timeout value is 5s, so it just waits in a busy loop if I have 'concurrent writers'"
+    )
 
 
 def test_parse_youtube_comment_buffer_new() -> None:
@@ -79,7 +85,10 @@ UCYnl1cugi7Lw1h8j6JNqNEg,2016-01-29T18:26:53.255+00:00,0,UgiNMzGz_nAsjXfCoAEC,,Z
         videoId="rWVAzS6duAs",
         contentJSON='{"text":"> I am about to get buried in the concrete"},{"text":"\n"},{"text":"the most normal  Veritasium video!"}',
     )
-    assert reconstruct_comment_content(res0.contentJSON, format="text") == "> I am about to get buried in the concrete\nthe most normal  Veritasium video!"
+    assert (
+        reconstruct_comment_content(res0.contentJSON, format="text")
+        == "> I am about to get buried in the concrete\nthe most normal  Veritasium video!"
+    )
 
     assert not isinstance(res1, Exception)
     assert res1 == CSVYoutubeComment(
@@ -91,7 +100,10 @@ UCYnl1cugi7Lw1h8j6JNqNEg,2016-01-29T18:26:53.255+00:00,0,UgiNMzGz_nAsjXfCoAEC,,Z
         videoId="ZuvK-oe647c",
         contentJSON='{"text":"Great illustration of Bell inequality!"}',
     )
-    assert reconstruct_comment_content(res1.contentJSON, format="text") == "Great illustration of Bell inequality!"
+    assert (
+        reconstruct_comment_content(res1.contentJSON, format="text")
+        == "Great illustration of Bell inequality!"
+    )
 
 
 def test_parse_youtube_live_chat_buffer() -> None:

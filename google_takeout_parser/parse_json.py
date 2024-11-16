@@ -126,11 +126,19 @@ def _parse_app_installs(p: Path) -> Iterator[Res[PlayStoreAppInstall]]:
         try:
             yield PlayStoreAppInstall(
                 title=japp["install"]["doc"]["title"],
-                deviceName=japp.get("install", {}).get("deviceAttribute", {}).get("deviceDisplayName"),
-                deviceCarrier=japp.get("install", {}).get("deviceAttribute", {}).get("carrier"),
-                deviceManufacturer=japp.get("install", {}).get("deviceAttribute", {}).get("manufacturer"),
+                deviceName=japp.get("install", {})
+                .get("deviceAttribute", {})
+                .get("deviceDisplayName"),
+                deviceCarrier=japp.get("install", {})
+                .get("deviceAttribute", {})
+                .get("carrier"),
+                deviceManufacturer=japp.get("install", {})
+                .get("deviceAttribute", {})
+                .get("manufacturer"),
                 lastUpdateTime=parse_json_utc_date(japp["install"]["lastUpdateTime"]),
-                firstInstallationTime=parse_json_utc_date(japp['install']['firstInstallationTime']),
+                firstInstallationTime=parse_json_utc_date(
+                    japp["install"]["firstInstallationTime"]
+                ),
             )
         except Exception as e:
             yield e
@@ -213,7 +221,9 @@ def _parse_semantic_location_history(p: Path) -> Iterator[Res[PlaceVisit]]:
                 continue
             location = CandidateLocation.from_dict(location_json)
             placeId = location.placeId
-            assert placeId is not None, location_json  # this is always present for the actual location
+            assert (
+                placeId is not None
+            ), location_json  # this is always present for the actual location
             duration = placeVisit["duration"]
             yield PlaceVisit(
                 name=location.name,
@@ -266,7 +276,7 @@ def _parse_chrome_history(p: Path) -> Iterator[Res[ChromeHistory]]:
                 # and there's likely lots of items that aren't https
                 url=item["url"],
                 dt=time_naive.replace(tzinfo=timezone.utc),
-                pageTransition=item.get("page_transition")
+                pageTransition=item.get("page_transition"),
             )
         except Exception as e:
             yield e
