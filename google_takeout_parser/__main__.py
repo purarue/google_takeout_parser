@@ -140,7 +140,7 @@ def parse(
     # note: actually no exceptions since since they're dropped
     if cache:
         if filter_:
-            logger.warn(
+            logger.warning(
                 "As it would otherwise re-compute every time, filtering happens after loading from cache"
             )
         res = list(tp.parse(cache=True))
@@ -173,7 +173,7 @@ def merge(
     filter_type = tuple(FILTER_OPTIONS[ff] for ff in filter_)
     if cache:
         if filter_:
-            logger.warn(
+            logger.warning(
                 "As it would otherwise re-compute every time, filtering happens after loading from cache"
             )
         res = list(cached_merge_takeouts(list(takeout_dir), locale_name=locale))

@@ -269,7 +269,9 @@ def _parse_chrome_history(p: Path) -> Iterator[Res[ChromeHistory]]:
         yield RuntimeError(f"Chrome/BrowserHistory: no 'Browser History' key in '{p}'")
     for item in json_data.get("Browser History", []):
         try:
-            time_naive = datetime.utcfromtimestamp(item["time_usec"] / 10**6)
+            time_naive = datetime.fromtimestamp(
+                item["time_usec"] / 10**6, tz=timezone.utc
+            )
             yield ChromeHistory(
                 title=item["title"],
                 # dont convert to https here, this is just the users history
