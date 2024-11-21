@@ -52,5 +52,5 @@ def get_paths_for_functions(
                     # no need to use os.sep here since paths in handler map always use /
                     paths.add(path.split("/")[0])
 
-    # sort to prevent behaviour changing based on avaiable locales
+    # sort to prevent behaviour changing based on available locales
     return sorted(paths)

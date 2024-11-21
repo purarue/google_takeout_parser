@@ -129,7 +129,7 @@ class CSVYoutubeComment(BaseEvent):
 class CSVYoutubeLiveChat(BaseEvent):
     """
     this is very similar to CSVYoutubeComment, but chatId instead of commentId
-    and it cant have a parentCommentId
+    and it can't have a parentCommentId
     """
 
     liveChatId: str

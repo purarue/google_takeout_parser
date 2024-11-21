@@ -28,7 +28,7 @@ def _parse_youtube_comment_row(row: Dict[str, Any]) -> Res[CSVYoutubeComment]:
         parentCommentId=parent_comment_id if parent_comment_id.strip() else None,
         videoId=video_id,
         # for now just pass the contents of the message as JSON forwards,
-        # will add helpers that let the user access it in different ways programatically
+        # will add helpers that let the user access it in different ways programmatically
         # instead of trying to define every access pattern in a model
         contentJSON=textJSON,
     )
