@@ -4,7 +4,7 @@ Parses the HTML MyActivity.html files that used to be the standard
 
 from pathlib import Path
 from datetime import datetime
-from typing import Any, List, Iterator, Optional, Tuple, Union, Dict, Iterable
+from typing import List, Iterator, Optional, Tuple, Union, Dict, Iterable
 from urllib.parse import urlparse, parse_qs
 
 import bs4
@@ -336,10 +336,12 @@ def _parse_html_activity(p: Path) -> Iterator[Res[Activity]]:
     file_dt = datetime.fromtimestamp(p.stat().st_mtime)
     data = p.read_text()
 
-    def soup_filter(tag: str, data: Dict[str, Any]) -> bool:
-        return tag == "div" and "outer-cell" in data.get("class", "")
+    def contains_outer_cell(cls: Optional[str]) -> bool:
+        return cls is not None and "outer-cell" in cls
 
-    soup = bs4.BeautifulSoup(data, "lxml", parse_only=bs4.SoupStrainer(soup_filter))  # type: ignore[arg-type]  # this overload is missing from stubs
+    strainer = bs4.SoupStrainer(name="div", attrs={"class": contains_outer_cell})
+
+    soup = bs4.BeautifulSoup(data, "lxml", parse_only=strainer)
 
     outer_divs: Iterable[bs4.element.Tag] = soup.children  # type: ignore[assignment]  # mypy can't guess they will actually be tags..
     for outer_div in outer_divs:
