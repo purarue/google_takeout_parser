@@ -158,7 +158,7 @@ Assuming you maintain an unpacked view, e.g. like:
 To parse one takeout:
 
 ```python
-from google_takeout.path_dispatch import TakeoutParser
+from google_takeout_parser.path_dispatch import TakeoutParser
 tp = TakeoutParser("/full/path/to/Takeout-1599315526")
 # to check if files are all handled
 tp.dispatch_map()
@@ -173,7 +173,7 @@ To parse a locale this doesn't support yet, you can create a dictionary which ma
 To cache and merge takeouts (maintains a single dependency on the paths you pass -- so if you change the input paths, it does a full recompute)
 
 ```python
-from google_takeout.merge import cached_merge_takeouts
+from google_takeout_parser.merge import cached_merge_takeouts
 results = list(cached_merge_takeouts(["/full/path/to/Takeout-1599315526", "/full/path/to/Takeout-1634971143"]))
 ```
 
