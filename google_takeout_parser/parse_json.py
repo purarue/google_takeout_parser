@@ -33,7 +33,7 @@ def _read_json_data(p: Path) -> Any:
         warnings.warn(
             "orjson not found, it can significantly speed up json parsing. Consider installing via 'pip install orjson'. Falling back onto stdlib json"
         )
-        return json.loads(p.read_text())
+        return json.loads(p.read_text(encoding="utf-8"))
     else:
         return orjson.loads(p.read_bytes())
 
@@ -42,7 +42,7 @@ def _read_json_data(p: Path) -> Any:
 # "YouTube and YouTube Music/history/watch-history.json"
 # This is also the 'My Activity' JSON format
 def _parse_json_activity(p: Path) -> Iterator[Res[Activity]]:
-    json_data = json.loads(p.read_text())
+    json_data = json.loads(p.read_text(encoding="utf-8"))
     if not isinstance(json_data, list):
         yield RuntimeError(f"Activity: Top level item in '{p}' isn't a list")
     for blob in json_data:
@@ -101,7 +101,7 @@ def _parse_json_activity(p: Path) -> Iterator[Res[Activity]]:
 
 
 def _parse_likes(p: Path) -> Iterator[Res[LikedYoutubeVideo]]:
-    json_data = json.loads(p.read_text())
+    json_data = json.loads(p.read_text(encoding="utf-8"))
     if not isinstance(json_data, list):
         yield RuntimeError(f"Likes: Top level item in '{p}' isn't a list")
     for jlike in json_data:
@@ -119,7 +119,7 @@ def _parse_likes(p: Path) -> Iterator[Res[LikedYoutubeVideo]]:
 
 
 def _parse_app_installs(p: Path) -> Iterator[Res[PlayStoreAppInstall]]:
-    json_data = json.loads(p.read_text())
+    json_data = json.loads(p.read_text(encoding="utf-8"))
     if not isinstance(json_data, list):
         yield RuntimeError(f"App installs: Top level item in '{p}' isn't a list")
     for japp in json_data:
@@ -193,7 +193,7 @@ def _check_required_keys(
 
 
 def _parse_semantic_location_history(p: Path) -> Iterator[Res[PlaceVisit]]:
-    json_data = json.loads(p.read_text())
+    json_data = json.loads(p.read_text(encoding="utf-8"))
     if not isinstance(json_data, dict):
         yield RuntimeError(f"Locations: Top level item in '{p}' isn't a dict")
     if "timelineObjects" not in json_data:
@@ -264,7 +264,7 @@ def _parse_semantic_location_history(p: Path) -> Iterator[Res[PlaceVisit]]:
 
 
 def _parse_chrome_history(p: Path) -> Iterator[Res[ChromeHistory]]:
-    json_data = json.loads(p.read_text())
+    json_data = json.loads(p.read_text(encoding="utf-8"))
     if "Browser History" not in json_data:
         yield RuntimeError(f"Chrome/BrowserHistory: no 'Browser History' key in '{p}'")
     for item in json_data.get("Browser History", []):

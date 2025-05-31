@@ -50,7 +50,7 @@ def _parse_youtube_comments_buffer(buf: TextIO) -> Iterator[Res[CSVYoutubeCommen
 
 
 def _parse_youtube_comments_csv(path: Path) -> Iterator[Res[CSVYoutubeComment]]:
-    with path.open("r", newline="") as f:
+    with path.open("r", newline="", encoding="utf-8") as f:
         yield from _parse_youtube_comments_buffer(f)
 
 
@@ -96,7 +96,7 @@ def _parse_youtube_live_chats_buffer(
 
 
 def _parse_youtube_live_chats_csv(path: Path) -> Iterator[Res[CSVYoutubeLiveChat]]:
-    with path.open("r", newline="") as f:
+    with path.open("r", newline="", encoding="utf-8") as f:
         yield from _parse_youtube_live_chats_buffer(f)
 
 
