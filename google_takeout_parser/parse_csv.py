@@ -15,16 +15,15 @@ def _parse_youtube_comment_row(row: Dict[str, Any]) -> Res[CSVYoutubeComment]:
         channel_id = row["Channel ID"]
         created_at = row.get("Comment Create Timestamp")
         if created_at is None:
-            created_at = row.get("Comment create timestamp")
+            created_at = row["Comment create timestamp"]
         price = row["Price"]
         parent_comment_id = row.get("Parent Comment ID")
         if parent_comment_id is None:
-            parent_comment_id = row.get("Parent comment ID")
+            parent_comment_id = row["Parent comment ID"]
         video_id = row["Video ID"]
         textJSON = row.get("Comment Text")
         if textJSON is None:
-            textJSON = row.get("Comment text")
-  
+            textJSON = row["Comment text"]
     except KeyError as e:
         return e
     return CSVYoutubeComment(
