@@ -13,11 +13,11 @@ def _parse_youtube_comment_row(row: Dict[str, Any]) -> Res[CSVYoutubeComment]:
     try:
         comment_id = row["Comment ID"]
         channel_id = row["Channel ID"]
-        created_at = row["Comment Create Timestamp"]
+        created_at = row["Comment create timestamp"]
         price = row["Price"]
-        parent_comment_id = row["Parent Comment ID"]
+        parent_comment_id = row["Parent comment ID"]
         video_id = row["Video ID"]
-        textJSON = row["Comment Text"]
+        textJSON = row["Comment text"]
     except KeyError as e:
         return e
     return CSVYoutubeComment(
