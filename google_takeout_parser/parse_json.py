@@ -293,10 +293,10 @@ def _parse_keep(p: Path) -> Iterator[Res[Keep]]:
     # so technically there is always just one yield value
     yield Keep(
         title=json_data["title"],
-        createdTimestampUsec=datetime.fromtimestamp(
+        created_dt=datetime.fromtimestamp(
             json_data["createdTimestampUsec"] / 1_000_000, tz=timezone.utc
         ),
-        userEditedTimestampUsec=datetime.fromtimestamp(
+        updated_dt=datetime.fromtimestamp(
             json_data["userEditedTimestampUsec"] / 1_000_000, tz=timezone.utc
         ),
         listContent=[

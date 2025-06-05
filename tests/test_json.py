@@ -469,10 +469,10 @@ def test_keep(tmp_path_f: Path) -> None:
     assert not isinstance(obj, Exception)
     assert obj == models.Keep(
         title="Grocery List",
-        userEditedTimestampUsec=datetime.datetime(
+        updated_dt=datetime.datetime(
             2022, 4, 7, 0, 25, 42, 757000, tzinfo=datetime.timezone.utc,
         ),
-        createdTimestampUsec=datetime.datetime(
+        created_dt=datetime.datetime(
             2022, 4, 7, 0, 25, 42, 757000, tzinfo=datetime.timezone.utc,
         ),
         listContent=[

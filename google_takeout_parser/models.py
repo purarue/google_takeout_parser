@@ -300,8 +300,8 @@ class ChromeHistory(BaseEvent):
 @dataclass
 class Keep(BaseEvent):
     title: str
-    userEditedTimestampUsec: datetime
-    createdTimestampUsec: datetime
+    updated_dt: datetime
+    created_dt: datetime
     listContent: Optional[List[KeepListContent]]
     textContent: Optional[str]
     textContentHtml: Optional[str]  # i guess this is good to have, found it in some of the json files
@@ -312,8 +312,8 @@ class Keep(BaseEvent):
     isArchived: bool
 
     @property
-    def key(self) -> Tuple[str, int, int]:
-        return self.title, int(self.createdTimestampUsec.timestamp()), int(self.userEditedTimestampUsec.timestamp())
+    def key(self) -> Tuple[str, int]:
+        return self.title, int(self.created_dt.timestamp())
 
 
 # can't compute this dynamically -- have to write it out
