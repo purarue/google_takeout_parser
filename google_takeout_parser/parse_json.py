@@ -21,6 +21,9 @@ from .models import (
     Location,
     PlaceVisit,
     CandidateLocation,
+    Keep,
+    KeepListContent,
+    KeepAnnotation
 )
 from .common import Res
 from .time_utils import parse_json_utc_date
@@ -282,3 +285,45 @@ def _parse_chrome_history(p: Path) -> Iterator[Res[ChromeHistory]]:
             )
         except Exception as e:
             yield e
+
+
+def _parse_keep(p: Path) -> Iterator[Res[Keep]]:
+    json_data = _read_json_data(p)
+    # For google keep, each note is stored as a separate json file,
+    # so technically there is always just one yield value
+    yield Keep(
+        title=json_data["title"],
+        created_dt=datetime.fromtimestamp(
+            json_data["createdTimestampUsec"] / 1_000_000, tz=timezone.utc
+        ),
+        updated_dt=datetime.fromtimestamp(
+            json_data["userEditedTimestampUsec"] / 1_000_000, tz=timezone.utc
+        ),
+        listContent=[
+            KeepListContent(
+                textHtml=content["textHtml"],
+                text=content["text"],
+                isChecked=content["isChecked"]
+            ) for content in json_data.get("listContent", [])
+        ],
+        textContent=(
+            json_data["textContent"]
+            if "textContent" in json_data else None
+        ),
+        textContentHtml=(
+            json_data["textContentHtml"]
+            if "textContentHtml" in json_data else None
+        ),
+        color=json_data["color"],
+        annotations=[
+            KeepAnnotation(
+                description=annotation["description"],
+                source=annotation["source"],
+                title=annotation["title"],
+                url=annotation["url"],
+            ) for annotation in json_data.get("annotations", [])
+        ],
+        isTrashed=json_data["isTrashed"],
+        isPinned=json_data["isPinned"],
+        isArchived=json_data["isArchived"]
+    )

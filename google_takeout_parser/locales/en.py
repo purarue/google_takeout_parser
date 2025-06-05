@@ -10,6 +10,7 @@ from .common import (
     _parse_location_history,
     _parse_semantic_location_history,
     _parse_chrome_history,
+    _parse_keep
 )
 
 
@@ -86,7 +87,8 @@ HANDLER_MAP: HandlerMap = {
     r"Groups": None,
     r"Google Play Games Services/Games/.*/(Achievements|Activity|Experience|Scores).html": None,
     r"Hangouts": None,
-    r"Keep": None,
+    r"Keep/.*?.json": _parse_keep,
+    r"Keep/": None,
     r"Maps (your places)": None,
     r"My Maps/.*.kmz": None,  # custom KML maps
     r"Saved/.*.csv": None,  # lists with saved places from Google Maps

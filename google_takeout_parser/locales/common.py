@@ -11,6 +11,7 @@ from ..parse_json import (  # noqa: F401
     _parse_location_history,
     _parse_semantic_location_history,
     _parse_chrome_history,
+    _parse_keep
 )
 from ..parse_csv import (  # noqa: F401
     _parse_youtube_comments_csv,
