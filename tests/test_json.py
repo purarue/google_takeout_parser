@@ -428,37 +428,38 @@ def test_semantic_location_history_2024(tmp_path_f: Path) -> None:
         ],
     )
 
+
 def test_keep(tmp_path_f: Path) -> None:
     data = {
-    "title": "Grocery List",
-    "userEditedTimestampUsec": 1649291142757000,
-    "createdTimestampUsec": 1649291142757000,
-    "listContent": [
-        {
-        "textHtml": "<li>Apples</li>",
-        "text": "Apples",
-        "isChecked": False 
-        },
-        {
-        "textHtml": "<li>Milk</li>",
-        "text": "Milk",
-        "isChecked": True 
-        }
-    ],
-    "textContent": "Don't forget to buy snacks too.",
-    "textContentHtml": "<p>Don't forget to buy snacks too.</p>",
-    "color": "yellow",
-    "annotations": [
-        {
-        "description": "Weekly grocery run",
-        "source": "Keep",
-        "title": "Shopping Note",
-        "url": "https://keep.google.com/"
-        }
-    ],
-    "isTrashed": False,
-    "isPinned": True,
-    "isArchived": False 
+        "title": "Grocery List",
+        "userEditedTimestampUsec": 1649291142757000,
+        "createdTimestampUsec": 1649291142757000,
+        "listContent": [
+            {
+                "textHtml": "<li>Apples</li>",
+                "text": "Apples",
+                "isChecked": False
+            },
+            {
+                "textHtml": "<li>Milk</li>",
+                "text": "Milk",
+                "isChecked": True
+            }
+        ],
+        "textContent": "Don't forget to buy snacks too.",
+        "textContentHtml": "<p>Don't forget to buy snacks too.</p>",
+        "color": "yellow",
+        "annotations": [
+            {
+                "description": "Weekly grocery run",
+                "source": "Keep",
+                "title": "Shopping Note",
+                "url": "https://keep.google.com/"
+            }
+        ],
+        "isTrashed": False,
+        "isPinned": True,
+        "isArchived": False
     }
 
     fp = tmp_path_f / "file"
@@ -478,12 +479,12 @@ def test_keep(tmp_path_f: Path) -> None:
             models.KeepListContent(
                 textHtml="<li>Apples</li>",
                 text="Apples",
-                isChecked=False 
+                isChecked=False
             ),
             models.KeepListContent(
                 textHtml="<li>Milk</li>",
                 text="Milk",
-                isChecked=True 
+                isChecked=True
             )
         ],
         textContent="Don't forget to buy snacks too.",
@@ -492,8 +493,8 @@ def test_keep(tmp_path_f: Path) -> None:
         annotations=[
             models.KeepAnnotation(
                 description="Weekly grocery run",
-                source="Keep", 
-                title="Shopping Note", 
+                source="Keep",
+                title="Shopping Note",
                 url="https://keep.google.com/"
             )
         ],
