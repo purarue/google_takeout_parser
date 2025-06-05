@@ -48,6 +48,19 @@ class LocationInfo(NamedTuple):
     sourceUrl: Optional[Url]
 
 
+class KeepListContent(NamedTuple):
+    textHtml: str
+    text: str
+    isChecked: bool
+
+
+class KeepAnnotation(NamedTuple):
+    description: str
+    source: str
+    title: str
+    url: str
+
+
 # fmt: off
 class BaseEvent(Protocol):
     @property
@@ -284,6 +297,25 @@ class ChromeHistory(BaseEvent):
         return self.url, int(self.dt.timestamp())
 
 
+@dataclass
+class Keep(BaseEvent):
+    title: str
+    userEditedTimestampUsec: datetime
+    createdTimestampUsec: datetime
+    listContent: Optional[List[KeepListContent]]
+    textContent: Optional[str]
+    textContentHtml: Optional[str]  # i guess this is good to have, found it in some of the json files
+    color: str
+    annotations: Optional[List[KeepAnnotation]]
+    isTrashed: bool
+    isPinned: bool
+    isArchived: bool
+
+    @property
+    def key(self) -> Tuple[str, int, int]:
+        return self.title, int(self.createdTimestampUsec.timestamp()), int(self.userEditedTimestampUsec.timestamp())
+
+
 # can't compute this dynamically -- have to write it out
 # if you want to override, override both global variable types with new types
 DEFAULT_MODEL_TYPE = Union[
@@ -296,6 +328,7 @@ DEFAULT_MODEL_TYPE = Union[
     CSVYoutubeComment,
     CSVYoutubeLiveChat,
     PlaceVisit,
+    Keep
 ]
 
 CacheResults = Iterator[Res[DEFAULT_MODEL_TYPE]]
