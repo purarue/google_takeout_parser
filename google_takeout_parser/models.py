@@ -312,8 +312,8 @@ class Keep(BaseEvent):
     isArchived: bool
 
     @property
-    def key(self) -> Tuple[str, int]:
-        return self.title, int(self.created_dt.timestamp())
+    def key(self) -> int:
+        return int(self.created_dt.timestamp())
 
 
 # can't compute this dynamically -- have to write it out
