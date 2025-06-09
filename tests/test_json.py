@@ -427,3 +427,78 @@ def test_semantic_location_history_2024(tmp_path_f: Path) -> None:
             ),
         ],
     )
+
+
+def test_keep(tmp_path_f: Path) -> None:
+    data = {
+        "title": "Grocery List",
+        "userEditedTimestampUsec": 1649291142757000,
+        "createdTimestampUsec": 1649291142757000,
+        "listContent": [
+            {
+                "textHtml": "<li>Apples</li>",
+                "text": "Apples",
+                "isChecked": False
+            },
+            {
+                "textHtml": "<li>Milk</li>",
+                "text": "Milk",
+                "isChecked": True
+            }
+        ],
+        "textContent": "Don't forget to buy snacks too.",
+        "textContentHtml": "<p>Don't forget to buy snacks too.</p>",
+        "color": "yellow",
+        "annotations": [
+            {
+                "description": "Weekly grocery run",
+                "source": "Keep",
+                "title": "Shopping Note",
+                "url": "https://keep.google.com/"
+            }
+        ],
+        "isTrashed": False,
+        "isPinned": True,
+        "isArchived": False
+    }
+
+    fp = tmp_path_f / "file"
+    fp.write_text(json.dumps(data))
+    res = list(prj._parse_keep(fp))
+    obj = res[0]
+    assert not isinstance(obj, Exception)
+    assert obj == models.Keep(
+        title="Grocery List",
+        updated_dt=datetime.datetime(
+            2022, 4, 7, 0, 25, 42, 757000, tzinfo=datetime.timezone.utc,
+        ),
+        created_dt=datetime.datetime(
+            2022, 4, 7, 0, 25, 42, 757000, tzinfo=datetime.timezone.utc,
+        ),
+        listContent=[
+            models.KeepListContent(
+                textHtml="<li>Apples</li>",
+                text="Apples",
+                isChecked=False
+            ),
+            models.KeepListContent(
+                textHtml="<li>Milk</li>",
+                text="Milk",
+                isChecked=True
+            )
+        ],
+        textContent="Don't forget to buy snacks too.",
+        textContentHtml="<p>Don't forget to buy snacks too.</p>",
+        color="yellow",
+        annotations=[
+            models.KeepAnnotation(
+                description="Weekly grocery run",
+                source="Keep",
+                title="Shopping Note",
+                url="https://keep.google.com/"
+            )
+        ],
+        isTrashed=False,
+        isPinned=True,
+        isArchived=False
+    )
