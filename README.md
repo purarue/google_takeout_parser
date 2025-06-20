@@ -25,6 +25,7 @@ Since google slowly removes your old data over time, I would recommend periodica
 - Chrome
 - Google Play Store
 - Location History
+- Keep
 - My Activity
   - Select JSON as format
 - Youtube and Youtube Music
@@ -40,6 +41,7 @@ This currently parses:
 - Activity (from dozens of Google Services) - `My Activity/*.html|*.json`)
 - Chrome History - `Chrome/BrowserHistory.json`
 - Google Play Installs - `Google Play Store/Installs.json`
+- Keep (Notes) - `Keep/*.json`
 - Location History:
   - Semantic Location History`Location History/Semantic Location History/*`
   - Location History `Location History/Location History.json`, `Location History/Records.json`
