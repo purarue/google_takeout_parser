@@ -502,3 +502,41 @@ def test_keep(tmp_path_f: Path) -> None:
         isPinned=True,
         isArchived=False
     )
+
+
+def test_keep_2021(tmp_path_f: Path) -> None:
+    """
+    Check that pre-April 2022 (or earler) Keep entries which didn't have createdTimestampUsec are parsed gracefully
+    """
+    fp = tmp_path_f / "file"
+    fp.write_text(r"""
+        {
+            "color":"DEFAULT",
+            "isTrashed":false,
+            "isPinned":true,
+            "isArchived":false,
+            "textContent":"some content",
+            "title":"note title",
+            "userEditedTimestampUsec":1518606205722000
+        }
+    """)
+    res = list(prj._parse_keep(fp))
+    obj = res[0]
+    assert not isinstance(obj, Exception)
+    assert obj == models.Keep(
+        title="note title",
+        updated_dt=datetime.datetime(
+            2018, 2, 14, 11, 3, 25, 722000, tzinfo=datetime.timezone.utc,
+        ),
+        created_dt=datetime.datetime(
+            2018, 2, 14, 11, 3, 25, 722000, tzinfo=datetime.timezone.utc,
+        ),
+        listContent=[],
+        textContent="some content",
+        textContentHtml=None,
+        color="DEFAULT",
+        annotations=[],
+        isTrashed=False,
+        isPinned=True,
+        isArchived=False,
+    )
