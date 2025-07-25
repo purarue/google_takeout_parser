@@ -292,14 +292,23 @@ def _parse_keep(p: Path) -> Iterator[Res[Keep]]:
     # For google keep, each note is stored as a separate json file,
     # so technically there is always just one yield value
     try:
+        updated_dt = datetime.fromtimestamp(
+            json_data["userEditedTimestampUsec"] / 1_000_000, tz=timezone.utc
+        )
+        # exports up to 2021 don't have created timestamp, only userEdited
+        # fall back onto updated timestamp if it's missing
+        created_dt_usec = json_data.get("createdTimestampUsec", None)
+        if created_dt_usec is None:
+            created_dt = updated_dt
+        else:
+            created_dt = datetime.fromtimestamp(
+                created_dt_usec / 1_000_000, tz=timezone.utc
+            )
+
         yield Keep(
             title=json_data["title"],
-            created_dt=datetime.fromtimestamp(
-                json_data["createdTimestampUsec"] / 1_000_000, tz=timezone.utc
-            ),
-            updated_dt=datetime.fromtimestamp(
-                json_data["userEditedTimestampUsec"] / 1_000_000, tz=timezone.utc
-            ),
+            created_dt=created_dt,
+            updated_dt=updated_dt,
             listContent=[
                 KeepListContent(
                     textHtml=content["textHtml"],
@@ -307,14 +316,8 @@ def _parse_keep(p: Path) -> Iterator[Res[Keep]]:
                     isChecked=content["isChecked"]
                 ) for content in json_data.get("listContent", [])
             ],
-            textContent=(
-                json_data["textContent"]
-                if "textContent" in json_data else None
-            ),
-            textContentHtml=(
-                json_data["textContentHtml"]
-                if "textContentHtml" in json_data else None
-            ),
+            textContent=json_data.get("textContent", None),
+            textContentHtml=json_data.get("textContentHtml", None),
             color=json_data["color"],
             annotations=[
                 KeepAnnotation(
