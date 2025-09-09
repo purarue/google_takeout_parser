@@ -67,4 +67,4 @@ warn_return_any = true
 warn_unreachable = true
 
 [tool.pytest.ini_options]
-addopts = ["--doctest-modules", "google_takeout_parser", "-vv", "./tests/"]
+addopts = "--doctest-modules google_takeout_parser -vv ./tests/"
