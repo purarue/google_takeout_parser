@@ -5,7 +5,7 @@ Lots of functions to transform the JSON from the Takeout to useful information
 import json
 from pathlib import Path
 from datetime import datetime, timezone
-from typing import Iterator, Any, Dict, Iterable, Optional, List
+from typing import Any, Optional, Iterator, Iterable
 import warnings
 
 from .http_allowlist import convert_to_https_opt
@@ -23,7 +23,7 @@ from .models import (
     CandidateLocation,
     Keep,
     KeepListContent,
-    KeepAnnotation
+    KeepAnnotation,
 )
 from .common import Res
 from .time_utils import parse_json_utc_date
@@ -50,7 +50,7 @@ def _parse_json_activity(p: Path) -> Iterator[Res[Activity]]:
         yield RuntimeError(f"Activity: Top level item in '{p}' isn't a list")
     for blob in json_data:
         try:
-            subtitles: List[Subtitles] = []
+            subtitles: list[Subtitles] = []
             for s in blob.get("subtitles", []):
                 if not isinstance(s, dict):
                     continue
@@ -147,7 +147,7 @@ def _parse_app_installs(p: Path) -> Iterator[Res[PlayStoreAppInstall]]:
             yield e
 
 
-def _parse_timestamp_key(d: Dict[str, Any], key: str) -> datetime:
+def _parse_timestamp_key(d: dict[str, Any], key: str) -> datetime:
     if f"{key}Ms" in d:
         return parse_datetime_millis(d[f"{key}Ms"])
     else:
@@ -187,7 +187,7 @@ _sem_required_location_keys = [
 
 
 def _check_required_keys(
-    d: Dict[str, Any], required_keys: Iterable[str]
+    d: dict[str, Any], required_keys: Iterable[str]
 ) -> Optional[str]:
     for k in required_keys:
         if k not in d:
@@ -313,8 +313,9 @@ def _parse_keep(p: Path) -> Iterator[Res[Keep]]:
                 KeepListContent(
                     textHtml=content["textHtml"],
                     text=content["text"],
-                    isChecked=content["isChecked"]
-                ) for content in json_data.get("listContent", [])
+                    isChecked=content["isChecked"],
+                )
+                for content in json_data.get("listContent", [])
             ],
             textContent=json_data.get("textContent", None),
             textContentHtml=json_data.get("textContentHtml", None),
@@ -325,11 +326,12 @@ def _parse_keep(p: Path) -> Iterator[Res[Keep]]:
                     source=annotation["source"],
                     title=annotation["title"],
                     url=annotation["url"],
-                ) for annotation in json_data.get("annotations", [])
+                )
+                for annotation in json_data.get("annotations", [])
             ],
             isTrashed=json_data["isTrashed"],
             isPinned=json_data["isPinned"],
-            isArchived=json_data["isArchived"]
+            isArchived=json_data["isArchived"],
         )
     except Exception as e:
         yield e

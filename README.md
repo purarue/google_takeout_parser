@@ -58,7 +58,7 @@ This was extracted out of [my HPI](https://github.com/purarue/HPI/tree/4bb1f174b
 
 ## Installation
 
-Requires `python3.9+`
+Requires `python3.10+`
 
 To install with pip, run:
 

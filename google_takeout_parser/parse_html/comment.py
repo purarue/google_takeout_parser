@@ -1,6 +1,6 @@
 import re
 from pathlib import Path
-from typing import Iterator, List
+from typing import Iterator
 from datetime import datetime, timezone
 
 import bs4
@@ -46,7 +46,7 @@ def _parse_html_li(li: bs4.element.Tag) -> YoutubeComment:
             desc += str(tag)
         elif isinstance(tag, bs4.element.Tag):
             desc += str(tag.text)
-    urls: List[str] = []
+    urls: list[str] = []
     for link in li.select("a"):
         if "href" in link.attrs:
             urls.append(convert_to_https(link.attrs["href"]))

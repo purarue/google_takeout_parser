@@ -3,7 +3,7 @@ Helper module to remove duplicate events when combining takeouts
 """
 
 from itertools import chain
-from typing import Set, Tuple, List, Any, Optional, Type
+from typing import Any, Optional
 
 
 from cachew import cachew
@@ -29,7 +29,7 @@ from .path_dispatch import TakeoutParser
     logger=logger,
 )
 def cached_merge_takeouts(
-    takeout_paths: List[PathIsh], locale_name: Optional[str]
+    takeout_paths: list[PathIsh], locale_name: Optional[str]
 ) -> CacheResults:
     """
     Cached version of merge events, merges each of these into one cachew database
@@ -46,7 +46,7 @@ def cached_merge_takeouts(
     takeout_paths would be:
     ['Takeout-1599315526', 'Takeout-1616796262', 'Takeout-1599728222']
     """
-    itrs: List[CacheResults] = []
+    itrs: list[CacheResults] = []
     for pth in takeout_paths:
         tk = TakeoutParser(pth, warn_exceptions=True, locale_name=locale_name)
         # have to ignore type conversion here -- its returns BaseEvent,
@@ -76,7 +76,7 @@ def merge_events(*sources: CacheResults) -> CacheResults:
     )
 
 
-Key = Tuple[Type[Any], Any]
+Key = tuple[type[Any], Any]
 
 
 def _create_key(e: BaseEvent) -> Key:
@@ -91,7 +91,7 @@ class GoogleEventSet:
     """
 
     def __init__(self) -> None:
-        self.keys: Set[Key] = set()
+        self.keys: set[Key] = set()
 
     def __contains__(self, other: BaseEvent) -> bool:
         return _create_key(other) in self.keys

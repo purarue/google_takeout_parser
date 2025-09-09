@@ -1,7 +1,7 @@
 import json
 import datetime
 from pathlib import Path
-from typing import Iterator, Any
+from typing import Any, Iterator
 
 import pytest
 import google_takeout_parser.parse_json as prj
@@ -435,16 +435,8 @@ def test_keep(tmp_path_f: Path) -> None:
         "userEditedTimestampUsec": 1649291142757000,
         "createdTimestampUsec": 1649291142757000,
         "listContent": [
-            {
-                "textHtml": "<li>Apples</li>",
-                "text": "Apples",
-                "isChecked": False
-            },
-            {
-                "textHtml": "<li>Milk</li>",
-                "text": "Milk",
-                "isChecked": True
-            }
+            {"textHtml": "<li>Apples</li>", "text": "Apples", "isChecked": False},
+            {"textHtml": "<li>Milk</li>", "text": "Milk", "isChecked": True},
         ],
         "textContent": "Don't forget to buy snacks too.",
         "textContentHtml": "<p>Don't forget to buy snacks too.</p>",
@@ -454,12 +446,12 @@ def test_keep(tmp_path_f: Path) -> None:
                 "description": "Weekly grocery run",
                 "source": "Keep",
                 "title": "Shopping Note",
-                "url": "https://keep.google.com/"
+                "url": "https://keep.google.com/",
             }
         ],
         "isTrashed": False,
         "isPinned": True,
-        "isArchived": False
+        "isArchived": False,
     }
 
     fp = tmp_path_f / "file"
@@ -470,22 +462,32 @@ def test_keep(tmp_path_f: Path) -> None:
     assert obj == models.Keep(
         title="Grocery List",
         updated_dt=datetime.datetime(
-            2022, 4, 7, 0, 25, 42, 757000, tzinfo=datetime.timezone.utc,
+            2022,
+            4,
+            7,
+            0,
+            25,
+            42,
+            757000,
+            tzinfo=datetime.timezone.utc,
         ),
         created_dt=datetime.datetime(
-            2022, 4, 7, 0, 25, 42, 757000, tzinfo=datetime.timezone.utc,
+            2022,
+            4,
+            7,
+            0,
+            25,
+            42,
+            757000,
+            tzinfo=datetime.timezone.utc,
         ),
         listContent=[
             models.KeepListContent(
-                textHtml="<li>Apples</li>",
-                text="Apples",
-                isChecked=False
+                textHtml="<li>Apples</li>", text="Apples", isChecked=False
             ),
             models.KeepListContent(
-                textHtml="<li>Milk</li>",
-                text="Milk",
-                isChecked=True
-            )
+                textHtml="<li>Milk</li>", text="Milk", isChecked=True
+            ),
         ],
         textContent="Don't forget to buy snacks too.",
         textContentHtml="<p>Don't forget to buy snacks too.</p>",
@@ -495,12 +497,12 @@ def test_keep(tmp_path_f: Path) -> None:
                 description="Weekly grocery run",
                 source="Keep",
                 title="Shopping Note",
-                url="https://keep.google.com/"
+                url="https://keep.google.com/",
             )
         ],
         isTrashed=False,
         isPinned=True,
-        isArchived=False
+        isArchived=False,
     )
 
 
@@ -509,7 +511,8 @@ def test_keep_2021(tmp_path_f: Path) -> None:
     Check that pre-April 2022 (or earler) Keep entries which didn't have createdTimestampUsec are parsed gracefully
     """
     fp = tmp_path_f / "file"
-    fp.write_text(r"""
+    fp.write_text(
+        r"""
         {
             "color":"DEFAULT",
             "isTrashed":false,
@@ -519,17 +522,32 @@ def test_keep_2021(tmp_path_f: Path) -> None:
             "title":"note title",
             "userEditedTimestampUsec":1518606205722000
         }
-    """)
+    """
+    )
     res = list(prj._parse_keep(fp))
     obj = res[0]
     assert not isinstance(obj, Exception)
     assert obj == models.Keep(
         title="note title",
         updated_dt=datetime.datetime(
-            2018, 2, 14, 11, 3, 25, 722000, tzinfo=datetime.timezone.utc,
+            2018,
+            2,
+            14,
+            11,
+            3,
+            25,
+            722000,
+            tzinfo=datetime.timezone.utc,
         ),
         created_dt=datetime.datetime(
-            2018, 2, 14, 11, 3, 25, 722000, tzinfo=datetime.timezone.utc,
+            2018,
+            2,
+            14,
+            11,
+            3,
+            25,
+            722000,
+            tzinfo=datetime.timezone.utc,
         ),
         listContent=[],
         textContent="some content",

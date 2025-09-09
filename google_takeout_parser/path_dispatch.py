@@ -6,20 +6,16 @@ import os
 import re
 from pathlib import Path
 from typing import (
-    Sequence,
-    Iterable,
-    Iterator,
-    Dict,
     Callable,
     Any,
     Optional,
-    Pattern,
-    List,
-    Type,
-    Tuple,
     Union,
     Literal,
+    Iterator,
+    Iterable,
+    Sequence,
 )
+from re import Pattern
 
 from collections import defaultdict
 
@@ -37,13 +33,13 @@ from .log import logger
 from .models import BaseEvent, get_union_args
 
 
-CacheKey = Tuple[Type[BaseEvent], ...]
+CacheKey = tuple[type[BaseEvent], ...]
 
 
 FilterType = Union[
     None,
-    Type[BaseEvent],
-    Sequence[Type[BaseEvent]],
+    type[BaseEvent],
+    Sequence[type[BaseEvent]],
 ]
 
 
@@ -71,7 +67,7 @@ def _handler_type_cache_key(handler: HandlerFunction) -> CacheKey:
     if return_type._name == "Iterator":
         return_type = return_type.__args__[0]
 
-    args: Optional[Tuple[Type]] = get_union_args(return_type)  # type: ignore[type-arg]
+    args: Optional[tuple[type]] = get_union_args(return_type)  # type: ignore[type-arg]
     if args is None:
         raise TypeError(
             f"Could not get union args for {return_type} in {handler.__name__}"
@@ -113,12 +109,12 @@ ErrorPolicy = Literal["yield", "raise", "drop"]
 
 
 def _handler_map_to_list(
-    passed_locale_map: Union[HandlerMap, List[HandlerMap], None]
-) -> List[HandlerMap]:
+    passed_locale_map: Union[HandlerMap, list[HandlerMap], None],
+) -> list[HandlerMap]:
     """
     converts user input to a list of handler maps
     """
-    handlers: List[HandlerMap] = []
+    handlers: list[HandlerMap] = []
     if passed_locale_map is not None:
         if isinstance(passed_locale_map, Sequence):
             for h in passed_locale_map:
@@ -139,7 +135,7 @@ class TakeoutParser:
         takeout_dir: PathIsh,
         cachew_identifier: Optional[str] = None,
         locale_name: Optional[str] = None,
-        handlers: Union[HandlerMap, List[HandlerMap], None] = None,
+        handlers: Union[HandlerMap, list[HandlerMap], None] = None,
         warn_exceptions: bool = True,
         error_policy: ErrorPolicy = "yield",
     ) -> None:
@@ -185,8 +181,8 @@ class TakeoutParser:
         *,
         takeout_dir: Path,
         locale_name: Optional[str],
-        passed_locale_map: Union[HandlerMap, List[HandlerMap], None] = None,
-    ) -> List[HandlerMap]:
+        passed_locale_map: Union[HandlerMap, list[HandlerMap], None] = None,
+    ) -> list[HandlerMap]:
         # any passed locale map overrides the environment variable, this would only
         # really be done by someone calling this manually in python
         handlers = _handler_map_to_list(passed_locale_map)
@@ -215,11 +211,11 @@ class TakeoutParser:
         cls,
         *,
         takeout_dir: Path,
-    ) -> List[HandlerMap]:
+    ) -> list[HandlerMap]:
         logger.debug(
             "No locale specified, guessing based on how many filepaths match from each locale"
         )
-        locale_scores: Dict[str, int] = {
+        locale_scores: dict[str, int] = {
             locale_name: len(
                 cls._dispatch_map_pure(
                     takeout_dir=takeout_dir,
@@ -264,7 +260,7 @@ class TakeoutParser:
     @staticmethod
     def _match_handler(
         relative_path: str,
-        handler: Iterable[Tuple[Pattern[str], Optional[HandlerFunction]]],
+        handler: Iterable[tuple[Pattern[str], Optional[HandlerFunction]]],
     ) -> HandlerMatch:
         """
         Match one of the handler regexes to a function which parses the file
@@ -282,7 +278,7 @@ class TakeoutParser:
         else:
             return RuntimeError(f"No function to handle parsing {sf}")
 
-    def dispatch_map(self) -> Dict[Path, HandlerFunction]:
+    def dispatch_map(self) -> dict[Path, HandlerFunction]:
         return self._dispatch_map_pure(
             takeout_dir=self.takeout_dir,
             handler_maps=self.handlers,
@@ -294,9 +290,9 @@ class TakeoutParser:
         cls,
         *,
         takeout_dir: Path,
-        handler_maps: List[HandlerMap],
+        handler_maps: list[HandlerMap],
         warn_exceptions: bool = True,
-    ) -> Dict[Path, HandlerFunction]:
+    ) -> dict[Path, HandlerFunction]:
         """
         A pure function for dispatch map so it can be used in other contexts (e.g. to detect locales by scanning the directory)
         """
@@ -312,14 +308,14 @@ class TakeoutParser:
             # we use walk rather than .glob to avoid instantiating too many Path objects
             # many of them will get rejected by the regexes in handlers anyway
 
-            takeout_dir_walk: Callable[..., Iterator[Tuple[Path, List[str], List[str]]]]
+            takeout_dir_walk: Callable[..., Iterator[tuple[Path, list[str], list[str]]]]
             if hasattr(takeout_dir, "walk"):
                 # this codepath is used from python 3.12 that has Path.walk
                 # , or other implementations that support it (e.g. zipfile wrappers)
                 takeout_dir_walk = takeout_dir.walk
             else:
 
-                def takeout_dir_walk() -> Iterator[Tuple[Path, List[str], List[str]]]:
+                def takeout_dir_walk() -> Iterator[tuple[Path, list[str], list[str]]]:
                     for root, dirs, files in os.walk(takeout_dir):
                         yield Path(root), dirs, files
 
@@ -334,7 +330,7 @@ class TakeoutParser:
                         continue
                     yield os.path.join(root_relative, f)
 
-        res: Dict[Path, HandlerFunction] = {}
+        res: dict[Path, HandlerFunction] = {}
         for rf in iter_relative_paths():
             # try to resolve file to parser-function by checking all supplied handlers
 
@@ -410,7 +406,7 @@ class TakeoutParser:
 
     def _group_by_return_type(
         self, filter_type: FilterType = None
-    ) -> Dict[CacheKey, List[Tuple[Path, BaseResults]]]:
+    ) -> dict[CacheKey, list[tuple[Path, BaseResults]]]:
         """
         Groups the dispatch_map by output model type
         If filter_type is provided, only returns that Model
@@ -423,8 +419,8 @@ class TakeoutParser:
             (filepath, iterator that produces activity),
         ]
         """
-        handlers: Dict[CacheKey, List[Tuple[Path, BaseResults]]] = defaultdict(list)
-        ftype: List[Type[BaseEvent]] = []
+        handlers: dict[CacheKey, list[tuple[Path, BaseResults]]] = defaultdict(list)
+        ftype: list[type[BaseEvent]] = []
         if filter_type is not None:
             if isinstance(filter_type, Sequence):
                 ftype = list(filter_type)
@@ -447,7 +443,7 @@ class TakeoutParser:
         """
         basename of all files in the takeout directory + google_takeout_version version
         """
-        file_index: List[str] = list(
+        file_index: list[str] = list(
             sorted([str(p.name) for p in self.takeout_dir.rglob("*")])
         )
         # store version at the beginning of hash

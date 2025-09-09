@@ -7,18 +7,7 @@ which determines unique events while merging
 
 from __future__ import annotations
 from datetime import datetime
-from typing import (
-    Optional,
-    Type,
-    List,
-    Tuple,
-    Any,
-    Union,
-    Iterator,
-    Dict,
-    Protocol,
-    NamedTuple,
-)
+from typing import Any, Union, Protocol, NamedTuple, Iterator
 from dataclasses import dataclass
 
 from .common import Res
@@ -26,7 +15,7 @@ from .common import Res
 Url = str
 
 
-def get_union_args(cls: Any) -> Optional[Tuple[Type]]:  # type: ignore[type-arg]
+def get_union_args(cls: Any) -> tuple[type] | None:  # type: ignore[type-arg]
     if getattr(cls, "__origin__", None) != Union:
         return None
 
@@ -38,14 +27,14 @@ def get_union_args(cls: Any) -> Optional[Tuple[Type]]:  # type: ignore[type-arg]
 
 class Subtitles(NamedTuple):
     name: str
-    url: Optional[Url]
+    url: Url | None
 
 
 class LocationInfo(NamedTuple):
-    name: Optional[str]
-    url: Optional[Url]
-    source: Optional[str]
-    sourceUrl: Optional[Url]
+    name: str | None
+    url: Url | None
+    source: str | None
+    sourceUrl: Url | None
 
 
 class KeepListContent(NamedTuple):
@@ -74,15 +63,15 @@ class Activity(BaseEvent):
     header: str
     title: str
     time: datetime
-    description: Optional[str]
-    titleUrl: Optional[Url]
+    description: str | None
+    titleUrl: Url | None
     # note: in HTML exports, there is no way to tell the difference between
     # a description and a subtitle, so they end up as subtitles
     # more lines of text describing this
-    subtitles: List[Subtitles]
-    details: List[str]
-    locationInfos: List[LocationInfo]
-    products: List[str]
+    subtitles: list[Subtitles]
+    details: list[str]
+    locationInfos: list[LocationInfo]
+    products: list[str]
 
     @property
     def dt(self) -> datetime:
@@ -93,7 +82,7 @@ class Activity(BaseEvent):
         return ", ".join(sorted(self.products))
 
     @property
-    def key(self) -> Tuple[str, str, int]:
+    def key(self) -> tuple[str, str, int]:
         return self.header, self.title, int(self.time.timestamp())
 
 
@@ -105,7 +94,7 @@ class YoutubeComment(BaseEvent):
 
     content: str
     dt: datetime
-    urls: List[Url]
+    urls: list[Url]
 
     @property
     def key(self) -> int:
@@ -117,8 +106,8 @@ class CSVYoutubeComment(BaseEvent):
     commentId: str
     channelId: str
     dt: datetime
-    price: Optional[str]
-    parentCommentId: Optional[str]
+    price: str | None
+    parentCommentId: str | None
     videoId: str
     contentJSON: str
 
@@ -148,7 +137,7 @@ class CSVYoutubeLiveChat(BaseEvent):
     liveChatId: str
     channelId: str
     dt: datetime
-    price: Optional[str]
+    price: str | None
     videoId: str
     contentJSON: str
 
@@ -183,9 +172,9 @@ class PlayStoreAppInstall(BaseEvent):
     lastUpdateTime: datetime  # timestamp for when the installation event occurred
     # timestamp for when you first installed the app on the given device
     firstInstallationTime: datetime
-    deviceName: Optional[str]
-    deviceCarrier: Optional[str]
-    deviceManufacturer: Optional[str]
+    deviceName: str | None
+    deviceCarrier: str | None
+    deviceManufacturer: str | None
 
     # noticed that lastUpdateTime was more accurate timestamp for the dt field
     # since different installation events of the same app had pretty close firstInstallation times
@@ -203,13 +192,13 @@ class PlayStoreAppInstall(BaseEvent):
 class Location(BaseEvent):
     lat: float
     lng: float
-    accuracy: Optional[float]
-    deviceTag: Optional[int]
-    source: Optional[str]
+    accuracy: float | None
+    deviceTag: int | None
+    source: str | None
     dt: datetime
 
     @property
-    def key(self) -> Tuple[float, float, Optional[float], int]:
+    def key(self) -> tuple[float, float, float | None, int]:
         return self.lat, self.lng, self.accuracy, int(self.dt.timestamp())
 
 
@@ -218,24 +207,24 @@ class Location(BaseEvent):
 class CandidateLocation:
     lat: float
     lng: float
-    address: Optional[str]
-    name: Optional[str]
+    address: str | None
+    name: str | None
 
-    placeId: Optional[str]
+    placeId: str | None
     """
     Sometimes missing, in this case semanticType is set
     """
 
-    semanticType: Optional[str]
+    semanticType: str | None
     """
     Something like TYPE_HOME or TYPE_WORK or TYPE_ALIAS
     """
 
-    locationConfidence: Optional[float]  # missing in older (around 2014/15) history
-    sourceInfoDeviceTag: Optional[int]
+    locationConfidence: float | None  # missing in older (around 2014/15) history
+    sourceInfoDeviceTag: int | None
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> CandidateLocation:
+    def from_dict(cls, data: dict[str, Any]) -> CandidateLocation:
         placeId = data.get("placeId")
         semanticType = data.get("semanticType")
         if placeId is None:
@@ -259,29 +248,29 @@ class PlaceVisit(BaseEvent):
     # these are part of the 'location' key
     lat: float
     lng: float
-    centerLat: Optional[float]
-    centerLng: Optional[float]
-    address: Optional[str]
-    name: Optional[str]
-    locationConfidence: Optional[float]  # missing in older (around 2014/15) history
+    centerLat: float | None
+    centerLng: float | None
+    address: str | None
+    name: str | None
+    locationConfidence: float | None  # missing in older (around 2014/15) history
     placeId: str
     startTime: datetime
     endTime: datetime
-    sourceInfoDeviceTag: Optional[int]
-    otherCandidateLocations: List[CandidateLocation]
+    sourceInfoDeviceTag: int | None
+    otherCandidateLocations: list[CandidateLocation]
     # TODO: parse these into an enum of some kind? may be prone to breaking due to new values from google though...
-    placeConfidence: Optional[str]  # older semantic history (pre-2018 didn't have it)
-    placeVisitType: Optional[str]
-    visitConfidence: Optional[float]  # missing in older (around 2014/15) history
-    editConfirmationStatus: Optional[str]  # missing in older (around 2014/15) history
-    placeVisitImportance: Optional[str] = None
+    placeConfidence: str | None  # older semantic history (pre-2018 didn't have it)
+    placeVisitType: str | None
+    visitConfidence: float | None  # missing in older (around 2014/15) history
+    editConfirmationStatus: str | None  # missing in older (around 2014/15) history
+    placeVisitImportance: str | None = None
 
     @property
     def dt(self) -> datetime:  # type: ignore[override]
         return self.startTime
 
     @property
-    def key(self) -> Tuple[float, float, int, Optional[float]]:
+    def key(self) -> tuple[float, float, int, float | None]:
         return self.lat, self.lng, int(self.startTime.timestamp()), self.visitConfidence
 
 
@@ -290,10 +279,10 @@ class ChromeHistory(BaseEvent):
     title: str
     url: Url
     dt: datetime
-    pageTransition: Optional[str]
+    pageTransition: str | None
 
     @property
-    def key(self) -> Tuple[str, int]:
+    def key(self) -> tuple[str, int]:
         return self.url, int(self.dt.timestamp())
 
 
@@ -302,11 +291,12 @@ class Keep(BaseEvent):
     title: str
     updated_dt: datetime
     created_dt: datetime
-    listContent: Optional[List[KeepListContent]]
-    textContent: Optional[str]
-    textContentHtml: Optional[str]  # i guess this is good to have, found it in some of the json files
+    listContent: list[KeepListContent] | None
+    textContent: str | None
+    # i guess this is good to have, found it in some of the json files
+    textContentHtml: str | None
     color: str
-    annotations: Optional[List[KeepAnnotation]]
+    annotations: list[KeepAnnotation] | None
     isTrashed: bool
     isPinned: bool
     isArchived: bool
@@ -328,7 +318,7 @@ DEFAULT_MODEL_TYPE = Union[
     CSVYoutubeComment,
     CSVYoutubeLiveChat,
     PlaceVisit,
-    Keep
+    Keep,
 ]
 
 CacheResults = Iterator[Res[DEFAULT_MODEL_TYPE]]

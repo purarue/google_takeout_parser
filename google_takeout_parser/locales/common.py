@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Dict, Optional, Callable, Iterator
+from typing import Optional, Callable, Iterator
 
 from ..models import BaseEvent, Res
 from ..parse_html.activity import _parse_html_activity  # noqa: F401
@@ -11,7 +11,7 @@ from ..parse_json import (  # noqa: F401
     _parse_location_history,
     _parse_semantic_location_history,
     _parse_chrome_history,
-    _parse_keep
+    _parse_keep,
 )
 from ..parse_csv import (  # noqa: F401
     _parse_youtube_comments_csv,
@@ -21,4 +21,4 @@ from ..parse_csv import (  # noqa: F401
 BaseResults = Iterator[Res[BaseEvent]]
 
 HandlerFunction = Callable[[Path], BaseResults]
-HandlerMap = Dict[str, Optional[HandlerFunction]]
+HandlerMap = dict[str, Optional[HandlerFunction]]

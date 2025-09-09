@@ -3,7 +3,7 @@ Taken from https://github.com/karlicoss/HPI/blob/4a04c09f314e10a4db8f35bf1ecc10e
 For backwards compatibility, used to parse HTML datetimes with non-standard timezones
 """
 
-from typing import Dict, List, Optional
+from typing import Optional
 from functools import lru_cache
 from datetime import datetime
 
@@ -11,15 +11,15 @@ import pytz
 
 
 # Can modify this by appending to the global variable before _abbr_to_timezone_map runs
-ABBR_TIMEZONES: List[str] = list(pytz.all_timezones)
+ABBR_TIMEZONES: list[str] = list(pytz.all_timezones)
 ABBR_TIMEZONES.append("UTC")
 
 
 @lru_cache(1)
-def _abbr_to_timezone_map() -> Dict[str, pytz.BaseTzInfo]:
+def _abbr_to_timezone_map() -> dict[str, pytz.BaseTzInfo]:
     timezones = list(ABBR_TIMEZONES)
 
-    res: Dict[str, pytz.BaseTzInfo] = {}
+    res: dict[str, pytz.BaseTzInfo] = {}
     for tzname in timezones:
         tz = pytz.timezone(tzname)
         infos = getattr(tz, "_tzinfos", [])

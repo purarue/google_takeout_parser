@@ -4,7 +4,7 @@ Parses the HTML MyActivity.html files that used to be the standard
 
 from pathlib import Path
 from datetime import datetime
-from typing import List, Iterator, Optional, Tuple, Union, Dict, Iterable
+from typing import Optional, Union, Iterator, Iterable
 from urllib.parse import urlparse, parse_qs
 
 import bs4
@@ -23,7 +23,7 @@ def clean_latin1_chars(s: str) -> str:
 
 
 TextOrEl = Union[bs4.element.Tag, bs4.element.NavigableString, str]
-ListOfTags = List[List[TextOrEl]]
+ListOfTags = list[list[TextOrEl]]
 
 
 def _group_by_brs(els: Iterable[PageElement]) -> ListOfTags:
@@ -36,7 +36,7 @@ def _group_by_brs(els: Iterable[PageElement]) -> ListOfTags:
     a URL we want
     """
     res: ListOfTags = []
-    cur: List[TextOrEl]
+    cur: list[TextOrEl]
     cur = []
     for tag in els:
         if isinstance(tag, bs4.element.NavigableString):
@@ -63,12 +63,12 @@ def _parse_subtitles(
     subtitle_cell: bs4.element.Tag,
     *,
     file_dt: Optional[datetime],
-) -> Res[Tuple[List[Subtitles], datetime]]:
-    parsed_subs: List[Subtitles] = []
+) -> Res[tuple[list[Subtitles], datetime]]:
+    parsed_subs: list[Subtitles] = []
 
     # iterate over direct children, and remove the last
     # one (the date)
-    sub_children: List[PageElement] = list(subtitle_cell.children)
+    sub_children: list[PageElement] = list(subtitle_cell.children)
     dt_raw_el = sub_children.pop(-1)
     if not isinstance(dt_raw_el, str):
         return ValueError(
@@ -101,7 +101,7 @@ def _parse_subtitles(
     return parsed_subs, parse_html_dt(dt_raw, file_dt=file_dt)
 
 
-def _split_by_caption_headers(groups: ListOfTags) -> Dict[str, ListOfTags]:
+def _split_by_caption_headers(groups: ListOfTags) -> dict[str, ListOfTags]:
     """
     Captions are structured like:
 
@@ -117,7 +117,7 @@ def _split_by_caption_headers(groups: ListOfTags) -> Dict[str, ListOfTags]:
     """
 
     k = ""
-    res: Dict[str, ListOfTags] = {}
+    res: dict[str, ListOfTags] = {}
     vals: ListOfTags = []
 
     for g in groups:
@@ -147,14 +147,12 @@ def _split_by_caption_headers(groups: ListOfTags) -> Dict[str, ListOfTags]:
     return res
 
 
-COMMON_GMAPS_QUERY_PARAMS = set(
-    [
-        "api",
-        "map_action",
-        "center",
-        "zoom",
-    ]
-)
+COMMON_GMAPS_QUERY_PARAMS = {
+    "api",
+    "map_action",
+    "center",
+    "zoom",
+}
 
 
 def _is_location_api_link(url: str) -> bool:
@@ -167,10 +165,10 @@ def _is_location_api_link(url: str) -> bool:
 
 def _parse_caption(
     cap_cell: bs4.element.Tag,
-) -> Tuple[List[str], List[LocationInfo], List[str]]:
-    details: List[str] = []
-    locationInfos: List[LocationInfo] = []
-    products: List[str] = []
+) -> tuple[list[str], list[LocationInfo], list[str]]:
+    details: list[str] = []
+    locationInfos: list[LocationInfo] = []
+    products: list[str] = []
 
     groups = _group_by_brs(list(cap_cell.children))
 
@@ -201,7 +199,7 @@ def _parse_caption(
                 sourceUrl: Optional[str] = None
 
                 textbuf = ""
-                links: List[str] = []
+                links: list[str] = []
 
                 for tag in value:
                     if isinstance(tag, bs4.element.NavigableString):
@@ -267,17 +265,17 @@ def _parse_activity_div(
 
     # all possible data that this div could parse
     dtime: datetime
-    subtitles: List[Subtitles] = []  # more lines of text describing this
-    details: List[str] = []
-    locationInfos: List[LocationInfo] = []
-    products: List[str] = []
+    subtitles: list[Subtitles] = []  # more lines of text describing this
+    details: list[str] = []
+    locationInfos: list[LocationInfo] = []
+    products: list[str] = []
 
     # cells in the div which contain the above information
 
     # has the main description/content and the datetime
-    subtitle_cells: List[Tag] = []
+    subtitle_cells: list[Tag] = []
     # has what product/extra info which this is related to
-    caption_cells: List[Tag] = []
+    caption_cells: list[Tag] = []
 
     # iterate over content-cells (contain all the info in this cell)
     # and categorize the cells. Pretty sure there should only be one

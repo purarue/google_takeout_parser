@@ -2,7 +2,7 @@ import os
 import json
 from datetime import datetime, date
 import dataclasses
-from typing import List, Optional, Callable, Sequence, Any, Dict, Type, Tuple
+from typing import Optional, Callable, Any, Sequence
 
 import click
 
@@ -35,12 +35,12 @@ def main(verbose: Optional[bool]) -> None:
 # use the union of types to determine the possible filters
 from .models import DEFAULT_MODEL_TYPE, get_union_args
 
-model_types: Optional[Tuple[Type[DEFAULT_MODEL_TYPE]]] = get_union_args(
+model_types: Optional[tuple[type[DEFAULT_MODEL_TYPE]]] = get_union_args(
     DEFAULT_MODEL_TYPE
 )
 assert model_types is not None
 
-FILTER_OPTIONS: Dict[str, Type[DEFAULT_MODEL_TYPE]] = {
+FILTER_OPTIONS: dict[str, type[DEFAULT_MODEL_TYPE]] = {
     t.__name__: t for t in model_types
 }
 
@@ -99,7 +99,7 @@ def _serialize_default(obj: Any) -> Any:
     raise TypeError(f"No known way to serialize {type(obj)} '{obj}'")
 
 
-def _handle_action(res: List[Any], action: str) -> None:
+def _handle_action(res: list[Any], action: str) -> None:
     if action == "repl":
         import IPython  # type: ignore[import]
 
@@ -169,7 +169,7 @@ def merge(
     from .models import DEFAULT_MODEL_TYPE, Res
     from .log import logger
 
-    res: List[Res[DEFAULT_MODEL_TYPE]] = []
+    res: list[Res[DEFAULT_MODEL_TYPE]] = []
     filter_type = tuple(FILTER_OPTIONS[ff] for ff in filter_)
     if cache:
         if filter_:

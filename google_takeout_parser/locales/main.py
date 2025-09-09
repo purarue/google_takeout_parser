@@ -1,4 +1,4 @@
-from typing import List, Sequence, Optional
+from typing import Optional, Sequence
 
 from .common import HandlerFunction
 from .en import HANDLER_MAP as EN_DEFAULT_HANDLER_MAP
@@ -12,7 +12,7 @@ LOCALES = {
 
 def get_paths_for_functions(
     functions: Optional[Sequence[HandlerFunction]] = None,
-) -> List[str]:
+) -> list[str]:
     """
     returns the base directory name for which the json activity parses for every locale
 
@@ -38,7 +38,7 @@ def get_paths_for_functions(
         _parse_chrome_history,
     )
 
-    funcs: List[HandlerFunction] = (
+    funcs: list[HandlerFunction] = (
         list(functions)
         if functions is not None
         else [_parse_json_activity, _parse_location_history, _parse_chrome_history]

@@ -1,8 +1,8 @@
 import os
 import tempfile
 import subprocess
-from typing import Generator
 from pathlib import Path
+from typing import Generator
 
 import pytest
 

@@ -10,7 +10,7 @@ from .common import (
     _parse_location_history,
     _parse_semantic_location_history,
     _parse_chrome_history,
-    _parse_keep
+    _parse_keep,
 )
 
 

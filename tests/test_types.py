@@ -24,7 +24,7 @@ def test_check_union() -> None:
 
 
 def test_parsing_return_type() -> None:
-    from typing import Iterator, Union
+    from typing import Union, Iterator
     from pathlib import Path
     from google_takeout_parser.path_dispatch import (
         _cache_key_to_str,

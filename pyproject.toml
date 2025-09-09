@@ -5,46 +5,35 @@ description = "Parses data out of your Google Takeout (History, Activity, Youtub
 readme = "README.md"
 license = "MIT"
 license-files = ["LICENSE"]
-requires-python = ">=3.9"
-authors = [
-    { name = "purarue" },
-]
+requires-python = ">=3.10"
+authors = [{ name = "purarue" }]
 keywords = ["google", "data", "parsing"]
 classifiers = [
-    "Programming Language :: Python",
-    "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3.12",
-    "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
 ]
 dependencies = [
-    "IPython",
-    "beautifulsoup4>=4.9.0",
-    "cachew>=0.16.20240129",
-    "click>=8.1",
-    "logzero>=1.7.0",
-    "lxml>=4.6.0",
-    "platformdirs>=2.3.0",
-    "pytz>=2021.3",
+  "IPython",
+  "beautifulsoup4>=4.9.0",
+  "cachew>=0.16.20240129",
+  "click>=8.1",
+  "logzero>=1.7.0",
+  "lxml>=4.6.0",
+  "platformdirs>=2.3.0",
+  "pytz>=2021.3",
 ]
 
 [project.urls]
 Homepage = "https://github.com/purarue/google_takeout_parser"
 
 [project.optional-dependencies]
-optional = [
-    "orjson",
-]
-testing = [
-    "flake8",
-    "mypy",
-    "pytest",
-    "types-beautifulsoup4",
-    "types-pytz",
-]
+optional = ["orjson"]
+testing = ["flake8", "mypy", "pytest", "types-beautifulsoup4", "types-pytz"]
 
 [project.scripts]
 google_takeout_parser = "google_takeout_parser.__main__:main"
@@ -55,14 +44,11 @@ build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
 include = [
-    "google_takeout_parser",
-    "google_takeout_parser.parse_html",
-    "google_takeout_parser.locales",
+  "google_takeout_parser",
+  "google_takeout_parser.parse_html",
+  "google_takeout_parser.locales",
 ]
-exclude = [
-    "tests",
-    "split_html",
-]
+exclude = ["tests", "split_html"]
 
 [tool.mypy]
 pretty = true
@@ -81,8 +67,4 @@ warn_return_any = true
 warn_unreachable = true
 
 [tool.pytest.ini_options]
-addopts = [
-    "--doctest-modules", "google_takeout_parser",
-    "-vv",
-    "./tests/",
-]
+addopts = ["--doctest-modules", "google_takeout_parser", "-vv", "./tests/"]

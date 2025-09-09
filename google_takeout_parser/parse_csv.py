@@ -2,14 +2,14 @@ import csv
 import json
 import io
 from pathlib import Path
-from typing import List, TextIO, Iterator, Literal, Union, Any, Dict
+from typing import TextIO, Literal, Union, Any, Iterator
 
 from .models import CSVYoutubeComment, CSVYoutubeLiveChat
 from .common import Res
 from .time_utils import parse_json_utc_date
 
 
-def _parse_youtube_comment_row(row: Dict[str, Any]) -> Res[CSVYoutubeComment]:
+def _parse_youtube_comment_row(row: dict[str, Any]) -> Res[CSVYoutubeComment]:
     try:
         comment_id = row["Comment ID"]
         channel_id = row["Channel ID"]
@@ -40,7 +40,7 @@ def _parse_youtube_comment_row(row: Dict[str, Any]) -> Res[CSVYoutubeComment]:
     )
 
 
-def is_empty_row(row: List[str]) -> bool:
+def is_empty_row(row: list[str]) -> bool:
     if len(row) == 0:
         return True
     for item in row:
@@ -63,7 +63,7 @@ def _parse_youtube_comments_csv(path: Path) -> Iterator[Res[CSVYoutubeComment]]:
 # Live Chat ID,Channel ID,Live Chat Create Timestamp,Price,Video ID,Live Chat Text
 
 
-def _parse_youtube_live_chat_row(row: List[str]) -> Res[CSVYoutubeLiveChat]:
+def _parse_youtube_live_chat_row(row: list[str]) -> Res[CSVYoutubeLiveChat]:
     try:
         (
             live_chat_id,
@@ -109,7 +109,7 @@ def _parse_youtube_live_chats_csv(path: Path) -> Iterator[Res[CSVYoutubeLiveChat
 CSVOutputFormat = Literal["text", "markdown"]
 
 
-def _validate_content(content: Union[str, Dict[Any, Any]]) -> Res[List[Dict[str, Any]]]:
+def _validate_content(content: Union[str, dict[Any, Any]]) -> Res[list[dict[str, Any]]]:
     if isinstance(content, str) and content.startswith('{"text":"'):
         # new format (since 2024)
         # this is a sequence of comma-separated serialized jsons...
@@ -145,7 +145,7 @@ def _validate_content(content: Union[str, Dict[Any, Any]]) -> Res[List[Dict[str,
 
 
 def reconstruct_comment_content(
-    content: Union[str, Dict[Any, Any]], format: CSVOutputFormat
+    content: Union[str, dict[Any, Any]], format: CSVOutputFormat
 ) -> Res[str]:
     takeout_segments = _validate_content(content)
     if isinstance(takeout_segments, Exception):
@@ -176,7 +176,7 @@ def reconstruct_comment_content(
         raise ValueError(f"Unknown format {format}")
 
 
-def extract_comment_links(content: Union[str, Dict[Any, Any]]) -> Res[List[str]]:
+def extract_comment_links(content: Union[str, dict[Any, Any]]) -> Res[list[str]]:
     takeout_segments = _validate_content(content)
     if isinstance(takeout_segments, Exception):
         return takeout_segments

@@ -8,17 +8,17 @@ sources
 """
 
 import logging
-from typing import Set, Optional
+from typing import Optional
 
 from .log import logger
 
 from urllib.parse import urlsplit, urlunsplit
 
-CONVERT_HTTP: Set[str] = set()
+CONVERT_HTTP: set[str] = set()
 
 # anything that ends with these domains
 # curl -sL 'https://www.google.com/supported_domains
-CONVERT_HTTP_SUFFIX: Set[str] = {
+CONVERT_HTTP_SUFFIX: set[str] = {
     "youtube.com",
     "bp0.blogger.com",
     "google.com",
