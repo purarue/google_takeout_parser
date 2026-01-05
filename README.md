@@ -30,7 +30,7 @@ Since google slowly removes your old data over time, I would recommend periodica
   - Select JSON as format
 - Youtube and Youtube Music
   - Select JSON as format
-  - In options, deselect `music (library and songs)` and `videos`
+  - In options, deselect `music (library and uploads)` and `videos`
 
 **Be sure to select JSON instead of HTML whenever possible**. Code to parse the HTML format is included here, but it is treated as legacy code and comes with worse performance and a myriad of other issues. See [legacy html parsing](#legacy-html-parsing)
 
