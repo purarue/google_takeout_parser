@@ -49,7 +49,15 @@ def _parse_html_li(li: bs4.element.Tag) -> YoutubeComment:
     urls: list[str] = []
     for link in li.select("a"):
         if "href" in link.attrs:
-            urls.append(convert_to_https(link.attrs["href"]))
+            val = link.attrs["href"]
+            if isinstance(val, str):
+                urls.append(convert_to_https(val))
+            else:
+                assert isinstance(
+                    val, list
+                ), f"Expected href to be a str or list, found {type(val)} {val}"
+                urls.extend(convert_to_https(cu) for cu in val)
+
     return YoutubeComment(
         content=clean_latin1_chars(desc).strip(), urls=urls, dt=parsed_date
     )

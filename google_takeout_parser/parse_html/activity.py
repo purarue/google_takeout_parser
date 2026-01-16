@@ -88,7 +88,15 @@ def _parse_subtitles(
                 if tag.name == "a":
                     buf += str(tag.text)
                     if "href" in tag.attrs:
-                        url = tag.attrs["href"]
+                        v = tag.attrs["href"]
+                        if isinstance(v, str):
+                            url = v
+                        elif isinstance(v, list) and len(v) > 0:
+                            url = v[0]
+                        else:
+                            assert (
+                                False
+                            ), f"Could not parse href into valid value, {type(v)} {v}"
                 else:
                     logger.warning(f"Unexpected tag! {tag}")
             else:
@@ -207,7 +215,14 @@ def _parse_caption(
                     elif isinstance(tag, bs4.element.Tag):
                         textbuf += str(tag.text)
                         if tag.name == "a" and "href" in tag.attrs:
-                            links.append(tag.attrs["href"])
+                            vals = tag.attrs["href"]
+                            if isinstance(vals, str):
+                                links.append(vals)
+                            else:
+                                assert isinstance(
+                                    vals, list
+                                ), f"Expected value to be list or str, found {type(vals)} {vals}"
+                                links.extend(vals)
 
                 textbuf = clean_latin1_chars(textbuf).strip()
 
