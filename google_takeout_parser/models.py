@@ -124,7 +124,7 @@ class CSVYoutubeComment(BaseEvent):
         return int(self.dt.timestamp())
 
 
-# considered re-using model above, but might be confusing
+# considered reusing model above, but might be confusing
 # and its useful to know if a message was from a livestream
 # or a VOD
 @dataclass

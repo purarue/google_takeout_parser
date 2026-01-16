@@ -26,7 +26,6 @@ Since google slowly removes your old data over time, I would recommend periodica
 
 - Chrome
 - Google Play Store
-- Timeline
 - Keep
 - My Activity
   - Select JSON as format
@@ -44,7 +43,7 @@ This currently parses:
 - Chrome History - `Chrome/BrowserHistory.json`
 - Google Play Installs - `Google Play Store/Installs.json`
 - Keep (Notes) - `Keep/*.json`
-- Location History:
+- Location History (though, this may not available through any new takeouts anymore as [its stored on device](https://9to5google.com/2023/12/12/google-location-history-timeline-device/)):
   - Semantic Location History`Location History/Semantic Location History/*`
   - Location History `Location History/Location History.json`, `Location History/Records.json`
 - Youtube:
@@ -113,22 +112,26 @@ Out[2]: 236654
 `$ google_takeout_parser --quiet merge ./Takeout-Old ./Takeout-New --action summary --no-cache`
 
 ```python
-Counter({'Activity': 366292,
-         'Location': 147581,
-         'YoutubeComment': 131,
-         'PlayStoreAppInstall': 122,
-         'LikedYoutubeVideo': 100,
-         'ChromeHistory': 4})
+Counter(
+    {
+        "Activity": 366292,
+        "Location": 147581,
+        "YoutubeComment": 131,
+        "PlayStoreAppInstall": 122,
+        "LikedYoutubeVideo": 100,
+        "ChromeHistory": 4,
+    }
+)
 ```
 
 Can also dump the info to JSON; e.g. to filter YouTube-related stuff from your Activity using [jq](https://jqlang.github.io/jq/):
 
 ```bash
 google_takeout_parser --quiet parse -a json -f Activity --no-cache ./Takeout-New |
-  # select stuff like Youtube, m.youtube.com, youtube.com using jq
-  jq '.[] | select(.header | ascii_downcase | test("youtube"))' |
-  # grab the titleUrl, ignoring nulls
-  jq 'select(.titleUrl) | .titleUrl' -r
+	# select stuff like Youtube, m.youtube.com, youtube.com using jq
+	jq '.[] | select(.header | ascii_downcase | test("youtube"))' |
+	# grab the titleUrl, ignoring nulls
+	jq 'select(.titleUrl) | .titleUrl' -r
 ```
 
 Also contains a small utility command to help move/extract the google takeout:
@@ -163,6 +166,7 @@ To parse one takeout:
 
 ```python
 from google_takeout_parser.path_dispatch import TakeoutParser
+
 tp = TakeoutParser("/full/path/to/Takeout-1599315526")
 # to check if files are all handled
 tp.dispatch_map()
@@ -178,15 +182,21 @@ To cache and merge takeouts (maintains a single dependency on the paths you pass
 
 ```python
 from google_takeout_parser.merge import cached_merge_takeouts
-results = list(cached_merge_takeouts(["/full/path/to/Takeout-1599315526", "/full/path/to/Takeout-1634971143"]))
+
+results = list(
+    cached_merge_takeouts(
+        ["/full/path/to/Takeout-1599315526", "/full/path/to/Takeout-1634971143"]
+    )
+)
 ```
 
 If you don't want to cache the results but want to merge results from multiple takeouts, can do something custom by directly using the `merge_events` function:
 
 ```python
 from google_takeout_parser.merge import merge_events, TakeoutParser
+
 itrs = []  # list of iterators of google events
-for path in ['path/to/Takeout-1599315526' 'path/to/Takeout-1616796262']:
+for path in ["path/to/Takeout-1599315526" "path/to/Takeout-1616796262"]:
     # ignore errors, error_policy can be 'yield', 'raise' or 'drop'
     tk = TakeoutParser(path, error_policy="drop")
     itrs.append(tk.parse(cache=False))
@@ -198,6 +208,7 @@ The events this returns is a combination of all types in the [`models.py`](googl
 ```python
 from google_takeout_parser.models import Location
 from google_takeout_parser.path_dispatch import TakeoutParser
+
 # filter_type can be a list to filter multiple types
 locations = list(TakeoutParser("path/to/Takeout").parse(filter_type=Location))
 len(locations)
@@ -231,7 +242,10 @@ This exposes some functions to help parse those, into text, markdown, or just ex
 ```python
 from google_takeout_parser.path_dispatch import TakeoutParser
 from google_takeout_parser.models import CSVYoutubeComment
-from google_takeout_parser.parse_csv import extract_comment_links, reconstruct_comment_content
+from google_takeout_parser.parse_csv import (
+    extract_comment_links,
+    reconstruct_comment_content,
+)
 
 
 path = "./Takeout-1599315526"

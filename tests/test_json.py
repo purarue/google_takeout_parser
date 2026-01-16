@@ -508,7 +508,7 @@ def test_keep(tmp_path_f: Path) -> None:
 
 def test_keep_2021(tmp_path_f: Path) -> None:
     """
-    Check that pre-April 2022 (or earler) Keep entries which didn't have createdTimestampUsec are parsed gracefully
+    Check that pre-April 2022 (or earlier) Keep entries which didn't have createdTimestampUsec are parsed gracefully
     """
     fp = tmp_path_f / "file"
     fp.write_text(
