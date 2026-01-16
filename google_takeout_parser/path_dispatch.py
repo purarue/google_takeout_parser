@@ -204,10 +204,10 @@ class TakeoutParser:
 
         # if not provided, guess by using the dispatch map with all known handlers,
         # using the one with the maximum number of matches
-        return cls._guess_locale(takeout_dir=takeout_dir)
+        return cls._guess_locale_order(takeout_dir=takeout_dir)
 
     @classmethod
-    def _guess_locale(
+    def _guess_locale_order(
         cls,
         *,
         takeout_dir: Path,
@@ -227,17 +227,15 @@ class TakeoutParser:
         }
 
         logger.debug(f"Locale scores: {locale_scores}")
+        sorted_locale_order = sorted(
+            ((locale_name, score) for locale_name, score in locale_scores.items()),
+            key=lambda tup: tup[1],
+            reverse=True,
+        )
+        sorted_locale_keys = [k for (k, _) in sorted_locale_order]
+        logger.debug(f"Using locales order: {sorted_locale_keys}")
 
-        # if there's multiple max values, return both of them
-        max_score = max(locale_scores.values())
-
-        matched_locales = [
-            name for name, score in locale_scores.items() if score == max_score
-        ]
-
-        logger.debug(f"Using locales: {matched_locales}")
-
-        return [LOCALES[name] for name in matched_locales]
+        return [LOCALES[key] for key in sorted_locale_keys]
 
     def _warn_if_no_activity(self) -> None:
         expect_one_of = get_paths_for_functions()

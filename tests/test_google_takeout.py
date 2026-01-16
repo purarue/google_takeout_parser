@@ -13,7 +13,10 @@ def test_structure() -> None:
     assert len(files) == 53
     assert len(m) == 35
 
-    assert tk._guess_locale(takeout_dir=tk.takeout_dir) == [LOCALES["EN"]]
+    assert tk._guess_locale_order(takeout_dir=tk.takeout_dir) == [
+        LOCALES["EN"],
+        LOCALES["DE"],
+    ]
 
 
 def test_structure_ger() -> None:
@@ -25,4 +28,7 @@ def test_structure_ger() -> None:
     assert len(files) == 148
     assert len(m) == 19
 
-    assert tk._guess_locale(takeout_dir=tk.takeout_dir) == [LOCALES["DE"]]
+    assert tk._guess_locale_order(takeout_dir=tk.takeout_dir) == [
+        LOCALES["DE"],
+        LOCALES["EN"],
+    ]
