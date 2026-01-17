@@ -4,7 +4,8 @@ Parses the HTML MyActivity.html files that used to be the standard
 
 from pathlib import Path
 from datetime import datetime
-from typing import Optional, Union, Iterator, Iterable
+from typing import Union
+from collections.abc import Iterator, Iterable
 from urllib.parse import urlparse, parse_qs
 
 import bs4
@@ -62,7 +63,7 @@ def _group_by_brs(els: Iterable[PageElement]) -> ListOfTags:
 def _parse_subtitles(
     subtitle_cell: bs4.element.Tag,
     *,
-    file_dt: Optional[datetime],
+    file_dt: datetime | None,
 ) -> Res[tuple[list[Subtitles], datetime]]:
     parsed_subs: list[Subtitles] = []
 
@@ -79,7 +80,7 @@ def _parse_subtitles(
     for group in _group_by_brs(sub_children):
         # loop vars
         buf: str = ""  # current text, till we hit a br (next group)
-        url: Optional[str] = None  # a URL, if this subtitle contains one
+        url: str | None = None  # a URL, if this subtitle contains one
 
         for tag in group:
             if isinstance(tag, bs4.element.NavigableString):
@@ -201,10 +202,10 @@ def _parse_caption(
                 # and if it is, use it as the name/url pair, else use the text
                 # as the source
 
-                name: Optional[str] = None
-                url: Optional[str] = None
-                source: Optional[str] = None
-                sourceUrl: Optional[str] = None
+                name: str | None = None
+                url: str | None = None
+                source: str | None = None
+                sourceUrl: str | None = None
 
                 textbuf = ""
                 links: list[str] = []
@@ -271,7 +272,7 @@ def _parse_caption(
 def _parse_activity_div(
     div: bs4.element.Tag,
     *,
-    file_dt: Optional[datetime],
+    file_dt: datetime | None,
 ) -> Res[Activity]:
     header_el = div.find("p", class_="mdl-typography--title")
     if header_el is None:
@@ -349,7 +350,7 @@ def _parse_html_activity(p: Path) -> Iterator[Res[Activity]]:
     file_dt = datetime.fromtimestamp(p.stat().st_mtime)
     data = p.read_text()
 
-    def contains_outer_cell(cls: Optional[str]) -> bool:
+    def contains_outer_cell(cls: str | None) -> bool:
         return cls is not None and "outer-cell" in cls
 
     strainer = bs4.SoupStrainer(name="div", attrs={"class": contains_outer_cell})

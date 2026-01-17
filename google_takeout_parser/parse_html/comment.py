@@ -1,6 +1,6 @@
 import re
 from pathlib import Path
-from typing import Iterator
+from collections.abc import Iterator
 from datetime import datetime, timezone
 
 import bs4

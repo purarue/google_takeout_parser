@@ -1,13 +1,12 @@
 import sys
-from typing import Union
 from datetime import datetime, timezone
 
 
-def parse_datetime_sec(d: Union[str, float, int]) -> datetime:
+def parse_datetime_sec(d: str | float | int) -> datetime:
     return datetime.fromtimestamp(int(d), tz=timezone.utc)
 
 
-def parse_datetime_millis(d: Union[str, float, int]) -> datetime:
+def parse_datetime_millis(d: str | float | int) -> datetime:
     return parse_datetime_sec(int(d) / 1000)
 
 

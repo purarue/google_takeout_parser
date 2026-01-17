@@ -2,7 +2,8 @@ import os
 import json
 from datetime import datetime, date
 import dataclasses
-from typing import Optional, Callable, Any, Sequence
+from typing import Any
+from collections.abc import Callable, Sequence
 
 import click
 
@@ -17,7 +18,7 @@ import click
     show_default=True,
     help="Change default log level",
 )
-def main(verbose: Optional[bool]) -> None:
+def main(verbose: bool | None) -> None:
     """
     Parse a google takeout!
     """
@@ -35,7 +36,7 @@ def main(verbose: Optional[bool]) -> None:
 # use the union of types to determine the possible filters
 from .models import DEFAULT_MODEL_TYPE, get_union_args
 
-model_types: Optional[tuple[type[DEFAULT_MODEL_TYPE]]] = get_union_args(
+model_types: tuple[type[DEFAULT_MODEL_TYPE]] | None = get_union_args(
     DEFAULT_MODEL_TYPE
 )
 assert model_types is not None
@@ -119,7 +120,7 @@ def _handle_action(res: list[Any], action: str) -> None:
 @click.argument("TAKEOUT_DIR", type=click.Path(exists=True), required=True)
 def parse(
     cache: bool,
-    locale: Optional[str],
+    locale: str | None,
     action: str,
     takeout_dir: str,
     filter_: Sequence[str],
@@ -156,7 +157,7 @@ def parse(
 @click.argument("TAKEOUT_DIR", type=click.Path(exists=True), nargs=-1, required=True)
 def merge(
     cache: bool,
-    locale: Optional[str],
+    locale: str | None,
     action: str,
     takeout_dir: Sequence[str],
     filter_: Sequence[str],

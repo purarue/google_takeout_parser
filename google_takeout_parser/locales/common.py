@@ -1,5 +1,6 @@
 from pathlib import Path
-from typing import Optional, Callable, Iterator
+from typing import Optional
+from collections.abc import Callable, Iterator
 
 from ..models import BaseEvent, Res
 from ..parse_html.activity import _parse_html_activity  # noqa: F401

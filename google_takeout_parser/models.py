@@ -7,7 +7,8 @@ which determines unique events while merging
 
 from __future__ import annotations
 from datetime import datetime
-from typing import Any, Union, Protocol, NamedTuple, Iterator
+from typing import Any, Union, Protocol, NamedTuple
+from collections.abc import Iterator
 from dataclasses import dataclass
 
 from .common import Res

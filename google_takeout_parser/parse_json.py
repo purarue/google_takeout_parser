@@ -5,7 +5,8 @@ Lots of functions to transform the JSON from the Takeout to useful information
 import json
 from pathlib import Path
 from datetime import datetime, timezone
-from typing import Any, Optional, Iterator, Iterable
+from typing import Any
+from collections.abc import Iterator, Iterable
 import warnings
 
 from .http_allowlist import convert_to_https_opt
@@ -188,7 +189,7 @@ _sem_required_location_keys = [
 
 def _check_required_keys(
     d: dict[str, Any], required_keys: Iterable[str]
-) -> Optional[str]:
+) -> str | None:
     for k in required_keys:
         if k not in d:
             return k

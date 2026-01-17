@@ -3,7 +3,6 @@ Taken from https://github.com/karlicoss/HPI/blob/4a04c09f314e10a4db8f35bf1ecc10e
 For backwards compatibility, used to parse HTML datetimes with non-standard timezones
 """
 
-from typing import Optional
 from functools import lru_cache
 from datetime import datetime
 
@@ -41,7 +40,7 @@ def abbr_to_timezone(abbr: str) -> pytz.BaseTzInfo:
 _TIME_FORMAT = "%b %d, %Y, %I:%M:%S %p"
 
 
-def parse_html_dt(s: str, *, file_dt: Optional[datetime]) -> datetime:
+def parse_html_dt(s: str, *, file_dt: datetime | None) -> datetime:
     fmt = _TIME_FORMAT
 
     end = s[-3:]

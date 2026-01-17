@@ -1,4 +1,4 @@
-from typing import Optional, Sequence
+from collections.abc import Sequence
 
 from .common import HandlerFunction
 from .en import HANDLER_MAP as EN_DEFAULT_HANDLER_MAP
@@ -11,7 +11,7 @@ LOCALES = {
 
 
 def get_paths_for_functions(
-    functions: Optional[Sequence[HandlerFunction]] = None,
+    functions: Sequence[HandlerFunction] | None = None,
 ) -> list[str]:
     """
     returns the base directory name for which the json activity parses for every locale

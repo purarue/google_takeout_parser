@@ -24,7 +24,8 @@ def test_check_union() -> None:
 
 
 def test_parsing_return_type() -> None:
-    from typing import Union, Iterator
+    from typing import Union
+    from collections.abc import Iterator
     from pathlib import Path
     from google_takeout_parser.path_dispatch import (
         _cache_key_to_str,
@@ -44,7 +45,7 @@ def test_parsing_return_type() -> None:
 
     def _test_multiple(
         path: Path,
-    ) -> Iterator[Res[Union[Activity, PlayStoreAppInstall]]]:
+    ) -> Iterator[Res[Activity | PlayStoreAppInstall]]:
         yield Exception("test")
 
     ret_type = _handler_type_cache_key(_test_multiple)

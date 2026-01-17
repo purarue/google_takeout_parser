@@ -2,7 +2,8 @@ import csv
 import json
 import io
 from pathlib import Path
-from typing import TextIO, Literal, Union, Any, Iterator
+from typing import TextIO, Literal, Any
+from collections.abc import Iterator
 
 from .models import CSVYoutubeComment, CSVYoutubeLiveChat
 from .common import Res
@@ -109,7 +110,7 @@ def _parse_youtube_live_chats_csv(path: Path) -> Iterator[Res[CSVYoutubeLiveChat
 CSVOutputFormat = Literal["text", "markdown"]
 
 
-def _validate_content(content: Union[str, dict[Any, Any]]) -> Res[list[dict[str, Any]]]:
+def _validate_content(content: str | dict[Any, Any]) -> Res[list[dict[str, Any]]]:
     if isinstance(content, str) and content.startswith('{"text":"'):
         # new format (since 2024)
         # this is a sequence of comma-separated serialized jsons...
@@ -145,7 +146,7 @@ def _validate_content(content: Union[str, dict[Any, Any]]) -> Res[list[dict[str,
 
 
 def reconstruct_comment_content(
-    content: Union[str, dict[Any, Any]], format: CSVOutputFormat
+    content: str | dict[Any, Any], format: CSVOutputFormat
 ) -> Res[str]:
     takeout_segments = _validate_content(content)
     if isinstance(takeout_segments, Exception):
@@ -176,7 +177,7 @@ def reconstruct_comment_content(
         raise ValueError(f"Unknown format {format}")
 
 
-def extract_comment_links(content: Union[str, dict[Any, Any]]) -> Res[list[str]]:
+def extract_comment_links(content: str | dict[Any, Any]) -> Res[list[str]]:
     takeout_segments = _validate_content(content)
     if isinstance(takeout_segments, Exception):
         return takeout_segments
