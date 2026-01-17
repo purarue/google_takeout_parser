@@ -4,7 +4,6 @@ Parses the HTML MyActivity.html files that used to be the standard
 
 from pathlib import Path
 from datetime import datetime
-from typing import Union
 from collections.abc import Iterator, Iterable
 from urllib.parse import urlparse, parse_qs
 
@@ -23,7 +22,7 @@ def clean_latin1_chars(s: str) -> str:
     return s.replace("\xa0", " ").replace("\u2003", " ")
 
 
-TextOrEl = Union[bs4.element.Tag, bs4.element.NavigableString, str]
+TextOrEl = bs4.element.Tag | bs4.element.NavigableString | str
 ListOfTags = list[list[TextOrEl]]
 
 

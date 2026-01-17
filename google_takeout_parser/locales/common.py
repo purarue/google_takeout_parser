@@ -1,5 +1,4 @@
 from pathlib import Path
-from typing import Optional
 from collections.abc import Callable, Iterator
 
 from ..models import BaseEvent, Res
@@ -22,4 +21,4 @@ from ..parse_csv import (  # noqa: F401
 BaseResults = Iterator[Res[BaseEvent]]
 
 HandlerFunction = Callable[[Path], BaseResults]
-HandlerMap = dict[str, Optional[HandlerFunction]]
+HandlerMap = dict[str, HandlerFunction | None]

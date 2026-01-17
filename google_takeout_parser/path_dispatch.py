@@ -7,7 +7,6 @@ import re
 from pathlib import Path
 from typing import (
     Any,
-    Optional,
     Union,
     Literal,
 )
@@ -100,7 +99,7 @@ def _cache_key_to_type(c: CacheKey) -> Any:
         return Union[c]  # type: ignore[valid-type]
 
 
-HandlerMatch = Res[Optional[HandlerFunction]]
+HandlerMatch = Res[HandlerFunction | None]
 
 ErrorPolicy = Literal["yield", "raise", "drop"]
 
