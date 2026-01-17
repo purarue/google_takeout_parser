@@ -3,7 +3,7 @@ Helper module to remove duplicate events when combining takeouts
 """
 
 from itertools import chain
-from typing import Any, Optional
+from typing import Any
 
 
 from cachew import cachew
@@ -29,7 +29,7 @@ from .path_dispatch import TakeoutParser
     logger=logger,
 )
 def cached_merge_takeouts(
-    takeout_paths: list[PathIsh], locale_name: Optional[str]
+    takeout_paths: list[PathIsh], locale_name: str | None
 ) -> CacheResults:
     """
     Cached version of merge events, merges each of these into one cachew database

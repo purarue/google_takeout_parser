@@ -6,15 +6,12 @@ import os
 import re
 from pathlib import Path
 from typing import (
-    Callable,
     Any,
     Optional,
     Union,
     Literal,
-    Iterator,
-    Iterable,
-    Sequence,
 )
+from collections.abc import Callable, Iterator, Iterable, Sequence
 from re import Pattern
 
 from collections import defaultdict
@@ -64,10 +61,10 @@ def _handler_type_cache_key(handler: HandlerFunction) -> CacheKey:
         raise TypeError(f"Could not get return type for {handler.__name__}")
 
     # remove top-level iterator if it has it
-    if return_type._name == "Iterator":
+    if return_type.__name__ == "Iterator" or return_type._name == "Iterator":
         return_type = return_type.__args__[0]
 
-    args: Optional[tuple[type]] = get_union_args(return_type)  # type: ignore[type-arg]
+    args: tuple[type] | None = get_union_args(return_type)  # type: ignore[type-arg]
     if args is None:
         raise TypeError(
             f"Could not get union args for {return_type} in {handler.__name__}"
@@ -109,7 +106,7 @@ ErrorPolicy = Literal["yield", "raise", "drop"]
 
 
 def _handler_map_to_list(
-    passed_locale_map: Union[HandlerMap, list[HandlerMap], None],
+    passed_locale_map: HandlerMap | list[HandlerMap] | None,
 ) -> list[HandlerMap]:
     """
     converts user input to a list of handler maps
@@ -133,9 +130,9 @@ class TakeoutParser:
     def __init__(
         self,
         takeout_dir: PathIsh,
-        cachew_identifier: Optional[str] = None,
-        locale_name: Optional[str] = None,
-        handlers: Union[HandlerMap, list[HandlerMap], None] = None,
+        cachew_identifier: str | None = None,
+        locale_name: str | None = None,
+        handlers: HandlerMap | list[HandlerMap] | None = None,
         warn_exceptions: bool = True,
         error_policy: ErrorPolicy = "yield",
     ) -> None:
@@ -165,7 +162,7 @@ class TakeoutParser:
         self.takeout_dir = takeout_dir.absolute()
         if not self.takeout_dir.exists():
             raise FileNotFoundError(f"{self.takeout_dir} does not exist!")
-        self.cachew_identifier: Optional[str] = cachew_identifier
+        self.cachew_identifier: str | None = cachew_identifier
 
         self.error_policy: ErrorPolicy = error_policy
         self.warn_exceptions = warn_exceptions
@@ -180,8 +177,8 @@ class TakeoutParser:
         cls,
         *,
         takeout_dir: Path,
-        locale_name: Optional[str],
-        passed_locale_map: Union[HandlerMap, list[HandlerMap], None] = None,
+        locale_name: str | None,
+        passed_locale_map: HandlerMap | list[HandlerMap] | None = None,
     ) -> list[HandlerMap]:
         # any passed locale map overrides the environment variable, this would only
         # really be done by someone calling this manually in python
@@ -258,7 +255,7 @@ class TakeoutParser:
     @staticmethod
     def _match_handler(
         relative_path: str,
-        handler: Iterable[tuple[Pattern[str], Optional[HandlerFunction]]],
+        handler: Iterable[tuple[Pattern[str], HandlerFunction | None]],
     ) -> HandlerMatch:
         """
         Match one of the handler regexes to a function which parses the file
@@ -334,7 +331,7 @@ class TakeoutParser:
 
             # cache handler information for warning if we can't resolve the file
             file_resolved: bool = False
-            handler_exception: Optional[Exception] = None
+            handler_exception: Exception | None = None
 
             for compiled_handler in compiled_handlers:
                 file_handler: HandlerMatch = cls._match_handler(rf, compiled_handler)

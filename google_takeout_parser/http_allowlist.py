@@ -8,7 +8,6 @@ sources
 """
 
 import logging
-from typing import Optional
 
 from .log import logger
 
@@ -211,7 +210,7 @@ CONVERT_HTTP_SUFFIX: set[str] = {
 }
 
 
-def _convert_to_https(url: str, logger: Optional[logging.Logger] = None) -> str:
+def _convert_to_https(url: str, logger: logging.Logger | None = None) -> str:
     uu = urlsplit(url)
     if uu.scheme == "http":
         without_www = uu.netloc[4:] if uu.netloc.startswith("www.") else uu.netloc
@@ -231,8 +230,8 @@ def _convert_to_https(url: str, logger: Optional[logging.Logger] = None) -> str:
 
 
 def _convert_to_https_opt(
-    url: Optional[str], logger: Optional[logging.Logger] = None
-) -> Optional[str]:
+    url: str | None, logger: logging.Logger | None = None
+) -> str | None:
     if url is None:
         return None
     return _convert_to_https(url, logger)
@@ -242,5 +241,5 @@ def convert_to_https(url: str) -> str:
     return _convert_to_https(url, logger=logger)
 
 
-def convert_to_https_opt(url: Optional[str]) -> Optional[str]:
+def convert_to_https_opt(url: str | None) -> str | None:
     return _convert_to_https_opt(url, logger=logger)
