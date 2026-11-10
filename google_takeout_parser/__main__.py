@@ -261,7 +261,8 @@ def move(from_: str, to_dir: str, extract: bool) -> None:
         target += ".zip"
         _safe_shutil_mv(from_, target)
     else:
-        assert from_.endswith("zip")
+        if not from_.endswith("zip"):
+            raise click.BadParameter("expected a .zip file", param_hint="--from")
         zf = zipfile.ZipFile(from_)
         with tempfile.TemporaryDirectory() as td:
             click.echo(f"Extracting {from_} to {td}")
